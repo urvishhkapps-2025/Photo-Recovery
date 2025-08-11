@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".activity.IntroScreen">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="wrap_content"
+            android:src="@drawable/ic_back"
+            android:padding="10dp"
+            android:visibility="gone"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="30dp"
+            android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:id="@+id/imageOfScreen"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:adjustViewBounds="true"
+            android:layout_marginHorizontal="12dp"
+            android:layout_above="@+id/textOfScreen"
+            android:src="@drawable/intro_1" />
+
+        <TextView
+            android:id="@+id/textOfScreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/real1"
+            android:layout_marginHorizontal="16dp"
+            android:fontFamily="@font/a_600"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="Restore Deleted Photos &amp; Videos To Your Phone At Anytime Anywhere"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            tools:ignore="HardcodedText" />
+
+
+        <RelativeLayout
+            android:id="@+id/real1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_marginBottom="100dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="30dp">
+
+            <LinearLayout
+                android:id="@+id/dotsContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp" />
+
+            <TextView
+                android:id="@+id/btnNext"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:fontFamily="@font/a_500"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="Next"
+                android:textColor="@color/appColor"
+                android:textSize="22sp"
+                tools:ignore="HardcodedText" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

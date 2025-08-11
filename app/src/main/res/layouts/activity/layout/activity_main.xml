@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".activity.MainActivity">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/txt1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp"
+                android:fontFamily="@font/a_500"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="Welcome To"
+                android:textColor="@color/black"
+                android:textSize="26sp" />
+
+            <TextView
+                android:id="@+id/txt2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/txt1"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/a_700"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="File Recovery App"
+                android:textColor="@color/appColor"
+                android:textSize="33sp" />
+
+            <ImageView
+                android:id="@+id/imgMain"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/txt2"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="30dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_main" />
+
+            <TextView
+                android:id="@+id/textOfScreen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/imgMain"
+                android:layout_centerHorizontal="true"
+                android:layout_marginHorizontal="26dp"
+                android:layout_marginVertical="30dp"
+                android:fontFamily="@font/a_500"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="This Deleted Video Recovery App Helps You Restore Lost Data, Including Photos, Videos, Audio Files, And More."
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                tools:ignore="HardcodedText" />
+
+            <LinearLayout
+                android:id="@+id/layLiner"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_below="@+id/textOfScreen"
+                android:layout_marginHorizontal="15dp"
+                android:weightSum="3">
+
+                <RelativeLayout
+                    android:id="@+id/clickPrivacy"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/weight_bg">
+
+                    <TextView
+                        android:id="@+id/t1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/a_500"
+                        android:includeFontPadding="false"
+                        android:text="Privacy\nPolicy"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_margin="15dp"
+                        android:src="@drawable/ic_privacy" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/clickRate"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/weight_bg">
+
+                    <TextView
+                        android:id="@+id/t2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/a_500"
+                        android:includeFontPadding="false"
+                        android:text="Rate\nUs"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_margin="15dp"
+                        android:src="@drawable/ic_rate" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/clickShare"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/weight_bg">
+
+                    <TextView
+                        android:id="@+id/t3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="10dp"
+                        android:fontFamily="@font/a_500"
+                        android:includeFontPadding="false"
+                        android:text="Share\nApp"
+                        android:textColor="@color/black"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_margin="15dp"
+                        android:src="@drawable/ic_share" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/btnStart"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_below="@+id/layLiner"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/btn_bg"
+                android:fontFamily="@font/a_400"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:text="Get Start"
+                android:textColor="@color/white"
+                android:textSize="18sp" />
+
+        </RelativeLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</RelativeLayout>

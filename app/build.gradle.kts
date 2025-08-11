@@ -33,6 +33,38 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+
+    viewBinding {
+        this.enable = true
+    }
+
+    sourceSets {
+        getByName("main") {
+            res {
+                srcDirs(
+                    "src\\main\\res",
+                    "src\\main\\res\\layouts",
+                    "src\\main\\res",
+                    "src\\main\\res\\layouts\\activity",
+                    "src\\main\\res",
+                    "src\\main\\res\\layouts\\activity\\layout",
+                    "src\\main\\res",
+                    "src\\main\\res\\layouts\\fragment",
+                    "src\\main\\res",
+                    "src\\main\\res\\layouts\\fragment\\layout",
+                    "src\\main\\res",
+                    "src\\main\\res\\layouts\\dialogs",
+                    "src\\main\\res",
+                    "src\\main\\res\\layouts\\dialogs\\layout",
+                    "src\\main\\res",
+                    "src\\main\\res\\layouts\\recyclerItem",
+                    "src\\main\\res",
+                    "src\\main\\res\\layouts\\recyclerItem\\layout",
+                )
+            }
+        }
+    }
+
 }
 
 dependencies {
@@ -45,4 +77,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+
+    implementation(libs.androidx.multidex)
+
 }

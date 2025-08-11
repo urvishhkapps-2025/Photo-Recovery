@@ -2,4 +2,17 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="appColor">#005EEC</color>
+
+    <color name="bgPhoto">#DEF8FF</color>
+    <color name="bgVideo">#FFE3F6</color>
+    <color name="bgDoc">#E3FFE6</color>
+    <color name="bgMusic">#FFE7DE</color>
+    <color name="bgContact">#E3E5FF </color>
+    <color name="bgRecycler">#E3F5FF</color>
+    <color name="bgJunk">#F9E6FF</color>
+
+
+
 </resources>

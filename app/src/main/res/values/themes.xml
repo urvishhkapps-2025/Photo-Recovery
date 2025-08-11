@@ -1,9 +1,17 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <!-- Base application theme. -->
     <style name="Base.Theme.PhotoRecovery" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorOnSecondary">@color/black</item>
+
+        <!-- Status bar color. -->
+        <item name="android:windowTranslucentStatus">false</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+
     </style>
 
     <style name="Theme.PhotoRecovery" parent="Base.Theme.PhotoRecovery" />
+
 </resources>
