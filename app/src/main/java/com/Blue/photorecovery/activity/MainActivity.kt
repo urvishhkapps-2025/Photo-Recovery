@@ -4,10 +4,7 @@ import android.content.Intent
 import android.graphics.LinearGradient
 import android.graphics.Shader
 import android.os.Bundle
-import android.os.Handler
 import android.util.TypedValue
-import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.toColorInt
 import androidx.core.net.toUri
@@ -20,7 +17,7 @@ import com.Blue.photorecovery.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private var doubleClick = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,22 +28,6 @@ class MainActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
-        val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                if (doubleClick) {
-                    finish()
-                }
-                doubleClick = true
-                Toast.makeText(
-                    this@MainActivity,
-                    "Please click BACK again to exit",
-                    Toast.LENGTH_SHORT
-                ).show()
-                Handler().postDelayed({ doubleClick = false }, 2000)
-            }
-        }
-        onBackPressedDispatcher.addCallback(this@MainActivity, callback)
 
         binding.apply {
 
@@ -95,6 +76,7 @@ class MainActivity : AppCompatActivity() {
             btnStart.setOnClickListener {
                 val intent = Intent(this@MainActivity, AllFileRecovery::class.java)
                 startActivity(intent)
+                finish()
             }
 
         }

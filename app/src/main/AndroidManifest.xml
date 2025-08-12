@@ -15,6 +15,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.PhotoRecovery">
         <activity
+            android:name=".activity.PhotoRecover"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.AllFileRecovery"
             android:exported="true"
             android:launchMode="singleTop"

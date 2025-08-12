@@ -1,6 +1,7 @@
 package com.Blue.photorecovery.activity
 
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.View
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -29,6 +30,8 @@ class Privacy : AppCompatActivity() {
         privacyLink = "https://google.com"
 
         binding.apply {
+
+            txt1.setTextSize(TypedValue.COMPLEX_UNIT_PX, 60f)
 
             btnBack.setOnClickListener {
                 finish()

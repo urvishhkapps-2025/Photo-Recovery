@@ -38,11 +38,6 @@ class IntroScreen : AppCompatActivity() {
 
         binding.apply {
 
-            btnBack.setOnClickListener {
-                count--
-                next(count)
-            }
-
             btnNext.setOnClickListener {
                 count++
                 next(count)
@@ -58,16 +53,13 @@ class IntroScreen : AppCompatActivity() {
                 imageOfScreen.setImageResource(R.drawable.intro_1)
                 textOfScreen.text =
                     "Restore Deleted Photos &amp; Videos To Your Phone At Anytime Anywhere"
-                btnBack.visibility = View.GONE
             } else if (count == 1) {
                 imageOfScreen.setImageResource(R.drawable.intro_2)
                 textOfScreen.text =
                     "Easily Recover Delete Photos, Videos, Files, Messages, & Contacts With This App."
-                btnBack.visibility = View.VISIBLE
             } else if (count == 2) {
                 imageOfScreen.setImageResource(R.drawable.intro_3)
                 textOfScreen.text = "Recover All Deleted Photos And Videos"
-                btnBack.visibility = View.VISIBLE
             } else if (count == 3) {
                 val intent = Intent(this@IntroScreen, MainActivity::class.java)
                 startActivity(intent)

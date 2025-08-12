@@ -4,11 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.Blue.photorecovery.R
+import com.Blue.photorecovery.common.UserDataManager
 import com.Blue.photorecovery.databinding.ActivitySplashBinding
 
 class Splash : AppCompatActivity() {
@@ -41,9 +41,16 @@ class Splash : AppCompatActivity() {
             }
 
             override fun onFinish() {
-                val intent = Intent(this@Splash, IntroScreen::class.java)
-                startActivity(intent)
-                finish()
+                if (UserDataManager.instance!!.getUserFirstTime()) {
+                    UserDataManager.instance!!.setUserFirstTime(false)
+                    val intent = Intent(this@Splash, IntroScreen::class.java)
+                    startActivity(intent)
+                    finish()
+                } else {
+                    val intent = Intent(this@Splash, AllFileRecovery::class.java)
+                    startActivity(intent)
+                    finish()
+                }
             }
         }.start()
 
