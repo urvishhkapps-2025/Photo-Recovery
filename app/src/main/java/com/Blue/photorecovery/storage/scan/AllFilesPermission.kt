@@ -3,6 +3,7 @@ package com.Blue.photorecovery.storage.scan
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
@@ -11,7 +12,6 @@ import androidx.activity.result.ActivityResultCaller
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import android.content.pm.PackageManager
 
 /**
  * How "all files" is interpreted by API level:
@@ -25,8 +25,12 @@ object AllFilesPermission {
 
     fun hasAllFilesAccess(activity: Activity): Boolean = when {
         Build.VERSION.SDK_INT >= 30 -> Environment.isExternalStorageManager()
-        Build.VERSION.SDK_INT in 24..28 -> has(activity, Manifest.permission.READ_EXTERNAL_STORAGE) &&
-                                           has(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+        Build.VERSION.SDK_INT in 24..28 -> has(
+            activity,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        ) &&
+                has(activity, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+
         Build.VERSION.SDK_INT == 29 -> false // scoped storage; no true "all files"
         else -> false
     }
@@ -57,12 +61,16 @@ object AllFilesPermission {
                     }
                 }
             }
+
             Build.VERSION.SDK_INT in 24..28 -> {
-                runtimePermsLauncher.launch(arrayOf(
-                    Manifest.permission.READ_EXTERNAL_STORAGE,
-                    Manifest.permission.WRITE_EXTERNAL_STORAGE
-                ))
+                runtimePermsLauncher.launch(
+                    arrayOf(
+                        Manifest.permission.READ_EXTERNAL_STORAGE,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE
+                    )
+                )
             }
+
             Build.VERSION.SDK_INT == 29 -> {
                 // No true "all files". Ask for READ so you can access media; use SAF for folders.
                 runtimePermsLauncher.launch(arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE))
@@ -71,10 +79,14 @@ object AllFilesPermission {
     }
 
     /** Create once (in Activity/Fragment) and reuse. */
-    fun createStoragePermsLauncher(caller: ActivityResultCaller,
-                                   onResult: (Map<String, Boolean>) -> Unit
+    fun createStoragePermsLauncher(
+        caller: ActivityResultCaller,
+        onResult: (Map<String, Boolean>) -> Unit
     ): ActivityResultLauncher<Array<String>> =
-        caller.registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions(), onResult)
+        caller.registerForActivityResult(
+            ActivityResultContracts.RequestMultiplePermissions(),
+            onResult
+        )
 
     private fun has(activity: Activity, perm: String): Boolean =
         ContextCompat.checkSelfPermission(activity, perm) == PackageManager.PERMISSION_GRANTED

@@ -34,7 +34,9 @@ object GetAllVideosFromFolder {
 
         val (selection, args) = if (Build.VERSION.SDK_INT >= 29) {
             val like = if (includeSubdirs) "$relativePath%" else relativePath
-            "${MediaStore.MediaColumns.RELATIVE_PATH} ${if (includeSubdirs) "LIKE" else "="} ?" to arrayOf(like)
+            "${MediaStore.MediaColumns.RELATIVE_PATH} ${if (includeSubdirs) "LIKE" else "="} ?" to arrayOf(
+                like
+            )
         } else {
             // Fallback for API < 29 using the DATA path
             val like = if (includeSubdirs) "%/$relativePath%" else "%/$relativePath"

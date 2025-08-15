@@ -11,7 +11,13 @@ class LinearGradientSpan(
     private val endColor: Int
 ) : ReplacementSpan() {
     private var spanWidth: Int = 0
-    override fun getSize(paint: Paint, text: CharSequence, start: Int, end: Int, fm: Paint.FontMetricsInt?) =
+    override fun getSize(
+        paint: Paint,
+        text: CharSequence,
+        start: Int,
+        end: Int,
+        fm: Paint.FontMetricsInt?
+    ) =
         paint.measureText(text, start, end).toInt().also { spanWidth = it }
 
     override fun draw(

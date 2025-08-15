@@ -18,7 +18,7 @@ import java.util.Locale
 
 object GetAllVideosFolder {
 
-    private val VIDEO_EXTS = setOf("mp4","m4v","3gp","webm","mkv","mov","avi","ts","flv")
+    private val VIDEO_EXTS = setOf("mp4", "m4v", "3gp", "webm", "mkv", "mov", "avi", "ts", "flv")
 
     private fun isVideoName(name: String?): Boolean {
         val n = name?.lowercase(Locale.US) ?: return false
@@ -34,7 +34,9 @@ object GetAllVideosFolder {
                 mmr.setDataSource(context, uri)
                 mmr.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION)?.toLong()
             }
-        } catch (_: Throwable) { null }
+        } catch (_: Throwable) {
+            null
+        }
     }
 
     private fun discoverRoots(): List<File> {
@@ -48,7 +50,11 @@ object GetAllVideosFolder {
                 val zero = File(f, "0")
                 if (zero.exists() && zero.canRead()) out += zero
             } else {
-                if (f.name.matches(Regex("""[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}""")) || f.name.startsWith("sdcard", true))
+                if (f.name.matches(Regex("""[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}""")) || f.name.startsWith(
+                        "sdcard",
+                        true
+                    )
+                )
                     out += f
             }
         }
@@ -79,7 +85,7 @@ object GetAllVideosFolder {
         allowAllFiles: Boolean = false,
         includeTrash: Boolean = false,
         fetchDuration: Boolean = false,
-        onProgress: (stage: String, done: Int, total: Int) -> Unit = { _,_,_ -> }
+        onProgress: (stage: String, done: Int, total: Int) -> Unit = { _, _, _ -> }
     ): VideoScanResult = withContext(Dispatchers.IO) {
 
         val t0 = SystemClock.elapsedRealtime()
@@ -99,7 +105,17 @@ object GetAllVideosFolder {
             size: Long
         ) {
             val f = foldersMap.getOrPut(key) {
-                VideoFolder(key, display.ifBlank { "Unknown" }, volume, bucketId, rel, 0, 0, null, rel?.trimEnd('/'))
+                VideoFolder(
+                    key,
+                    display.ifBlank { "Unknown" },
+                    volume,
+                    bucketId,
+                    rel,
+                    0,
+                    0,
+                    null,
+                    rel?.trimEnd('/')
+                )
             }
             f.count++
             f.totalBytes += size
@@ -115,16 +131,25 @@ object GetAllVideosFolder {
             videos += item
             totalBytes += item.sizeBytes
 
-            val folderKey = "$sourceKey|${item.volume}|${item.bucketId ?: "R:${item.relativePath ?: display}"}"
-            addToFolder(folderKey, display, item.volume, item.bucketId, item.relativePath, item.uri, item.sizeBytes)
+            val folderKey =
+                "$sourceKey|${item.volume}|${item.bucketId ?: "R:${item.relativePath ?: display}"}"
+            addToFolder(
+                folderKey,
+                display,
+                item.volume,
+                item.bucketId,
+                item.relativePath,
+                item.uri,
+                item.sizeBytes
+            )
         }
 
         fun displayName(bucket: String?, rel: String?, parentPath: String?): String {
             val name = when {
-                !rel.isNullOrBlank()        -> rel.trimEnd('/').substringAfterLast('/')
+                !rel.isNullOrBlank() -> rel.trimEnd('/').substringAfterLast('/')
                 !parentPath.isNullOrBlank() -> File(parentPath).name
-                !bucket.isNullOrBlank()     -> bucket
-                else                        -> "Unknown"
+                !bucket.isNullOrBlank() -> bucket
+                else -> "Unknown"
             }
             return if (name.equals(".thumbnails", true)) ".Thumbnails" else name
         }
@@ -157,46 +182,58 @@ object GetAllVideosFolder {
                     add(MediaStore.Video.Media.BUCKET_ID)
                     add(MediaStore.Video.Media.BUCKET_DISPLAY_NAME)
                     if (Build.VERSION.SDK_INT >= 29) add(MediaStore.MediaColumns.RELATIVE_PATH)
-                    if (Build.VERSION.SDK_INT < 29)  add(MediaStore.MediaColumns.DATA)
+                    if (Build.VERSION.SDK_INT < 29) add(MediaStore.MediaColumns.DATA)
                     if (Build.VERSION.SDK_INT >= 30) add(MediaStore.MediaColumns.IS_TRASHED)
                 }.toTypedArray()
 
-                val selection = if (Build.VERSION.SDK_INT >= 30 && !includeTrash) "${MediaStore.MediaColumns.IS_TRASHED}=0" else null
+                val selection =
+                    if (Build.VERSION.SDK_INT >= 30 && !includeTrash) "${MediaStore.MediaColumns.IS_TRASHED}=0" else null
 
-                context.contentResolver.query(base, projection, selection, null,
+                context.contentResolver.query(
+                    base, projection, selection, null,
                     "${MediaStore.Video.Media.DATE_TAKEN} DESC"
                 )?.use { c ->
-                    val idX   = c.getColumnIndexOrThrow(MediaStore.Video.Media._ID)
+                    val idX = c.getColumnIndexOrThrow(MediaStore.Video.Media._ID)
                     val nameX = c.getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME)
                     val sizeX = c.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE)
-                    val durX  = c.getColumnIndex(MediaStore.Video.Media.DURATION)
-                    val takenX= c.getColumnIndex(MediaStore.Video.Media.DATE_TAKEN)
-                    val addX  = c.getColumnIndex(MediaStore.Video.Media.DATE_ADDED)
-                    val modX  = c.getColumnIndex(MediaStore.Video.Media.DATE_MODIFIED)
-                    val bidX  = c.getColumnIndex(MediaStore.Video.Media.BUCKET_ID)
-                    val bnmX  = c.getColumnIndex(MediaStore.Video.Media.BUCKET_DISPLAY_NAME)
-                    val relX  = if (Build.VERSION.SDK_INT >= 29) c.getColumnIndex(MediaStore.MediaColumns.RELATIVE_PATH) else -1
-                    val dataX = if (Build.VERSION.SDK_INT < 29)  c.getColumnIndex(MediaStore.MediaColumns.DATA) else -1
-                    val trX   = if (Build.VERSION.SDK_INT >= 30) c.getColumnIndex(MediaStore.MediaColumns.IS_TRASHED) else -1
+                    val durX = c.getColumnIndex(MediaStore.Video.Media.DURATION)
+                    val takenX = c.getColumnIndex(MediaStore.Video.Media.DATE_TAKEN)
+                    val addX = c.getColumnIndex(MediaStore.Video.Media.DATE_ADDED)
+                    val modX = c.getColumnIndex(MediaStore.Video.Media.DATE_MODIFIED)
+                    val bidX = c.getColumnIndex(MediaStore.Video.Media.BUCKET_ID)
+                    val bnmX = c.getColumnIndex(MediaStore.Video.Media.BUCKET_DISPLAY_NAME)
+                    val relX =
+                        if (Build.VERSION.SDK_INT >= 29) c.getColumnIndex(MediaStore.MediaColumns.RELATIVE_PATH) else -1
+                    val dataX =
+                        if (Build.VERSION.SDK_INT < 29) c.getColumnIndex(MediaStore.MediaColumns.DATA) else -1
+                    val trX =
+                        if (Build.VERSION.SDK_INT >= 30) c.getColumnIndex(MediaStore.MediaColumns.IS_TRASHED) else -1
 
                     while (c.moveToNext()) {
                         val id = c.getLong(idX)
                         val uri = ContentUris.withAppendedId(base, id)
                         val size = if (!c.isNull(sizeX)) c.getLong(sizeX) else 0L
                         val name = if (!c.isNull(nameX)) c.getString(nameX) else null
-                        val dur  = if (durX >= 0 && !c.isNull(durX)) c.getLong(durX) else null
+                        val dur = if (durX >= 0 && !c.isNull(durX)) c.getLong(durX) else null
                         val date = when {
-                            takenX >= 0 && !c.isNull(takenX) && c.getLong(takenX) > 0 -> c.getLong(takenX)
+                            takenX >= 0 && !c.isNull(takenX) && c.getLong(takenX) > 0 -> c.getLong(
+                                takenX
+                            )
+
                             addX >= 0 && !c.isNull(addX) -> c.getLong(addX) * 1000L
                             modX >= 0 && !c.isNull(modX) -> c.getLong(modX) * 1000L
                             else -> null
                         }
-                        val bid  = if (bidX >= 0 && !c.isNull(bidX)) c.getLong(bidX) else null
-                        val bnm  = if (bnmX >= 0 && !c.isNull(bnmX)) c.getString(bnmX) else null
-                        val rel  = if (relX >= 0 && !c.isNull(relX)) c.getString(relX) else null
-                        val dataParent = if (dataX >= 0 && !c.isNull(dataX)) File(c.getString(dataX)).parent else null
-                        val trashed = if (trX >= 0 && !c.isNull(trX)) (c.getInt(trX) == 1) else false
-                        if (!includeTrash && trashed) { processed++; continue }
+                        val bid = if (bidX >= 0 && !c.isNull(bidX)) c.getLong(bidX) else null
+                        val bnm = if (bnmX >= 0 && !c.isNull(bnmX)) c.getString(bnmX) else null
+                        val rel = if (relX >= 0 && !c.isNull(relX)) c.getString(relX) else null
+                        val dataParent =
+                            if (dataX >= 0 && !c.isNull(dataX)) File(c.getString(dataX)).parent else null
+                        val trashed =
+                            if (trX >= 0 && !c.isNull(trX)) (c.getInt(trX) == 1) else false
+                        if (!includeTrash && trashed) {
+                            processed++; continue
+                        }
 
                         val disp = displayName(bnm, rel, dataParent)
                         addVideo(
@@ -206,7 +243,11 @@ object GetAllVideosFolder {
                         )
 
                         processed++
-                        if (processed % 150 == 0 || processed == grandTotal) onProgress("mediastore", processed, grandTotal)
+                        if (processed % 150 == 0 || processed == grandTotal) onProgress(
+                            "mediastore",
+                            processed,
+                            grandTotal
+                        )
                     }
                 }
             }
@@ -265,7 +306,8 @@ object GetAllVideosFolder {
                 stack += root
                 while (stack.isNotEmpty()) {
                     val dir = stack.removeLast()
-                    val canonical = runCatching { dir.canonicalPath }.getOrNull() ?: dir.absolutePath
+                    val canonical =
+                        runCatching { dir.canonicalPath }.getOrNull() ?: dir.absolutePath
                     if (!visitedDirs.add(canonical)) continue
 
                     dir.listFiles()?.forEach { f ->
@@ -279,12 +321,14 @@ object GetAllVideosFolder {
                             val parent = f.parentFile?.name ?: "Root"
                             val uri = Uri.fromFile(f)
                             val size = runCatching { f.length() }.getOrNull() ?: 0L
-                            val date = runCatching { f.lastModified() }.getOrNull()?.takeIf { it > 0 }
+                            val date =
+                                runCatching { f.lastModified() }.getOrNull()?.takeIf { it > 0 }
                             val dur = if (fetchDuration) getDurationMsSafely(context, uri) else null
 
                             addVideo(
                                 VideoItem(
-                                    id = (f.absolutePath.hashCode().toLong() shl 32) or size.hashCode().toLong(),
+                                    id = (f.absolutePath.hashCode()
+                                        .toLong() shl 32) or size.hashCode().toLong(),
                                     uri = uri,
                                     name = f.name,
                                     sizeBytes = size,

@@ -1,23 +1,14 @@
 package com.Blue.photorecovery.activity.storage
 
-import ImageFolder
 import android.os.Bundle
 import android.util.TypedValue
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.lifecycleScope
 import com.Blue.photorecovery.R
-import com.Blue.photorecovery.adapter.images.FoldersAdapter
 import com.Blue.photorecovery.databinding.ActivityRecoverBinding
-import com.Blue.photorecovery.storage.images.FolderSection
-import com.Blue.photorecovery.storage.images.GetAllImagesFromFolder.loadImagesInFolder
-import com.Blue.photorecovery.storage.images.ScanImages
 import com.Blue.photorecovery.storage.scan.ScanCache
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @Suppress("UNCHECKED_CAST")
 class Recover : AppCompatActivity() {

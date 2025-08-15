@@ -1,6 +1,5 @@
 package com.Blue.photorecovery.adapter.images
 
-import ImageFolder
 import android.net.Uri
 import android.util.Log
 import android.util.TypedValue
@@ -10,7 +9,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
 import com.Blue.photorecovery.R
 import com.Blue.photorecovery.storage.images.FolderSection
 
@@ -37,11 +35,11 @@ class FoldersAdapter(
     override fun onBindViewHolder(h: VH, pos: Int) {
         h.setIsRecyclable(false)
         val sec = items[pos]
-        h.textFolderName.text = sec.folder.displayName.replace(".","")+"(${sec.folder.count})"
+        h.textFolderName.text = sec.folder.displayName.replace(".", "") + "(${sec.folder.count})"
         h.textFolderName.setTextSize(TypedValue.COMPLEX_UNIT_PX, 50f)
-        Log.i("TAG", "onBindViewHolder: "+sec)
+        Log.i("TAG", "onBindViewHolder: " + sec)
         fun bindThumb(imgView: ImageView, uri: Uri?) {
-            Log.i("TAG", "bindThumb: "+uri)
+            Log.i("TAG", "bindThumb: " + uri)
             if (uri == null) {
                 imgView.visibility = View.GONE
             } else {

@@ -36,7 +36,7 @@ class ScanScreen : AppCompatActivity() {
         }
 
         storagePermsLauncher = AllFilesPermission.createStoragePermsLauncher(this) { grants ->
-            val allFiles = AllFilesPermission.hasAllFilesAccess(this)
+            AllFilesPermission.hasAllFilesAccess(this)
         }
 
         binding.apply {

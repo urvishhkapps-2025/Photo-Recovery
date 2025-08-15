@@ -14,13 +14,13 @@ import java.io.File
 import java.util.Locale
 import kotlin.math.absoluteValue
 
-object GetAllImagesFolder{
+object GetAllImagesFolder {
 
-     val IMG_EXTS = setOf(
+    val IMG_EXTS = setOf(
         "jpg", "jpeg", "png", "gif", "webp", "heic", "heif", "bmp", "tif", "tiff", "dng", "raw"
     )
 
-     fun isImageFile(name: String): Boolean {
+    fun isImageFile(name: String): Boolean {
         val n = name.lowercase(Locale.US)
         val dot = n.lastIndexOf('.')
         if (dot <= 0 || dot == n.lastIndex) return false
@@ -28,7 +28,7 @@ object GetAllImagesFolder{
         return ext in IMG_EXTS
     }
 
-     fun discoverRoots(): List<File> {
+    fun discoverRoots(): List<File> {
         val roots = mutableListOf<File>()
         val primary = Environment.getExternalStorageDirectory()
         if (primary.exists() && primary.canRead()) roots += primary
