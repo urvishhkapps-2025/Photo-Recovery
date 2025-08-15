@@ -1,4 +1,4 @@
-package com.Blue.photorecovery.activity
+package com.Blue.photorecovery.activity.common
 
 import android.content.Intent
 import android.os.Bundle
@@ -60,25 +60,25 @@ class AllFileRecovery : AppCompatActivity() {
             btnSetting.setOnClickListener { }
 
             clickPhoto.setOnClickListener {
-                val intent = Intent(this@AllFileRecovery, PhotoRecover::class.java)
+                val intent = Intent(this@AllFileRecovery, ScanScreen::class.java)
                 intent.putExtra("count", 1)
                 startActivity(intent)
             }
 
             clickVideo.setOnClickListener {
-                val intent = Intent(this@AllFileRecovery, PhotoRecover::class.java)
+                val intent = Intent(this@AllFileRecovery, ScanScreen::class.java)
                 intent.putExtra("count", 2)
                 startActivity(intent)
             }
 
             clickDocument.setOnClickListener {
-                val intent = Intent(this@AllFileRecovery, PhotoRecover::class.java)
+                val intent = Intent(this@AllFileRecovery, ScanScreen::class.java)
                 intent.putExtra("count", 3)
                 startActivity(intent)
             }
 
             clickAudio.setOnClickListener {
-                val intent = Intent(this@AllFileRecovery, PhotoRecover::class.java)
+                val intent = Intent(this@AllFileRecovery, ScanScreen::class.java)
                 intent.putExtra("count", 4)
                 startActivity(intent)
             }

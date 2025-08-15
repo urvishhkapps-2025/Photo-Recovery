@@ -11,6 +11,11 @@ activity = "1.10.1"
 constraintlayout = "2.2.1"
 
 multidex = "2.0.1"
+coil = "2.7.0"
+
+lottie = "6.6.7"
+
+shimmer = "0.5.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -23,6 +28,11 @@ androidx-activity = { group = "androidx.activity", name = "activity", version.re
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 
 androidx-multidex = { module = "androidx.multidex:multidex", version.ref = "multidex" }
+coil = { module = "io.coil-kt:coil", version.ref = "coil" }
+
+lottie = { module = "com.airbnb.android:lottie", version.ref = "lottie" }
+
+shimmer = { module = "com.facebook.shimmer:shimmer", version.ref = "shimmer" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

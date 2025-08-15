@@ -14,4 +14,18 @@
 
     <style name="Theme.PhotoRecovery" parent="Base.Theme.PhotoRecovery" />
 
+    <!-- Bottom Sheet Dialog Start -->
+    <style name="TransparentBottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="bottomSheetStyle">@style/TransparentBottomSheetStyle</item>
+    </style>
+
+    <style name="TransparentBottomSheetStyle" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@android:color/transparent</item>
+        <item name="behavior_peekHeight">0dp</item>
+    </style>
+    <!-- Bottom Sheet Dialog End -->
+
 </resources>

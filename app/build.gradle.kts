@@ -79,5 +79,16 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(libs.androidx.multidex)
+    implementation(libs.coil)
+
+    /***********************************
+     ******** Lottie Animation *********
+     ***********************************/
+    implementation(libs.lottie)
+
+    /***********************************
+     ******** Shimmer Animation *********
+     ***********************************/
+    implementation(libs.shimmer)
 
 }

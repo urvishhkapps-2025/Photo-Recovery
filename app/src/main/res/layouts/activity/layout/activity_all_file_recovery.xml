@@ -4,7 +4,8 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.AllFileRecovery">
+    android:background="@color/white"
+    tools:context=".activity.common.AllFileRecovery">
 
     <RelativeLayout
         android:id="@+id/layToolbar"
@@ -26,9 +27,9 @@
 
         <ImageView
             android:id="@+id/btnSetting"
-            android:layout_alignParentEnd="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginStart="10dp"
             android:padding="10dp"
@@ -46,11 +47,11 @@
             android:layout_height="wrap_content">
 
             <LinearLayout
-                android:layout_marginTop="20dp"
                 android:id="@+id/layLiner"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
                 android:layout_marginHorizontal="15dp"
+                android:layout_marginTop="20dp"
                 android:weightSum="3">
 
                 <RelativeLayout
@@ -59,92 +60,93 @@
                     android:layout_height="match_parent"
                     android:layout_marginHorizontal="8dp"
                     android:layout_weight="1"
-                    android:backgroundTint="@color/bgPhoto"
-                    android:background="@drawable/weight_bg">
+                    android:background="@drawable/weight_bg"
+                    android:backgroundTint="@color/bgPhoto">
 
                     <TextView
                         android:id="@+id/t1"
                         android:layout_width="wrap_content"
-                        android:text="Photo\nRecover"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="5dp"
                         android:fontFamily="@font/a_500"
                         android:includeFontPadding="false"
-                        android:layout_marginEnd="5dp"
-                        android:textColor="@color/black"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginStart="15dp"
-                        android:layout_height="wrap_content"/>
+                        android:text="Photo\nRecover"
+                        android:textColor="@color/black" />
 
                     <ImageView
                         android:layout_width="30dp"
-                        android:src="@drawable/ic_photo"
-                        android:layout_margin="15dp"
-                        android:layout_alignParentBottom="true"
+                        android:layout_height="30dp"
                         android:layout_alignParentEnd="true"
-                        android:layout_height="30dp"/>
+                        android:layout_alignParentBottom="true"
+                        android:layout_margin="15dp"
+                        android:src="@drawable/ic_photo" />
 
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/clickVideo"
                     android:layout_width="0dp"
-                    android:layout_marginHorizontal="8dp"
                     android:layout_height="match_parent"
+                    android:layout_marginHorizontal="8dp"
                     android:layout_weight="1"
-                    android:backgroundTint="@color/bgVideo"
-                    android:background="@drawable/weight_bg">
+                    android:background="@drawable/weight_bg"
+                    android:backgroundTint="@color/bgVideo">
 
                     <TextView
                         android:id="@+id/t2"
                         android:layout_width="wrap_content"
-                        android:text="Video\nRecover"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="5dp"
                         android:fontFamily="@font/a_500"
                         android:includeFontPadding="false"
-                        android:layout_marginEnd="5dp"
-                        android:textColor="@color/black"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginStart="15dp"
-                        android:layout_height="wrap_content"/>
+                        android:text="Video\nRecover"
+                        android:textColor="@color/black" />
 
                     <ImageView
                         android:layout_width="30dp"
-                        android:src="@drawable/ic_video"
-                        android:layout_margin="15dp"
-                        android:layout_alignParentBottom="true"
+                        android:layout_height="30dp"
                         android:layout_alignParentEnd="true"
-                        android:layout_height="30dp"/>
+                        android:layout_alignParentBottom="true"
+                        android:layout_margin="15dp"
+                        android:src="@drawable/ic_video" />
 
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/clickDocument"
-                    android:layout_marginHorizontal="8dp"
+                    android:id="@+id/clickAudio"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:layout_marginHorizontal="8dp"
                     android:layout_weight="1"
-                    android:backgroundTint="@color/bgDoc"
-                    android:background="@drawable/weight_bg">
+                    android:background="@drawable/weight_bg"
+                    android:backgroundTint="@color/bgMusic">
 
                     <TextView
-                        android:id="@+id/t3"
+                        android:id="@+id/t4"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
                         android:layout_marginTop="10dp"
+                        android:layout_marginEnd="5dp"
                         android:fontFamily="@font/a_500"
-                        android:maxLines="2"
-                        android:layout_marginEnd="3dp"
+
+
                         android:includeFontPadding="false"
-                        android:text="Document\nRecover"
-                        android:textColor="@color/black"
-                        />
+                        android:maxLines="2"
+                        android:text="Audio\nRecover"
+                        android:textColor="@color/black" />
 
                     <ImageView
                         android:layout_width="30dp"
-                        android:src="@drawable/ic_file"
-                        android:layout_margin="15dp"
-                        android:layout_alignParentBottom="true"
+                        android:layout_height="30dp"
                         android:layout_alignParentEnd="true"
-                        android:layout_height="30dp"/>
+                        android:layout_alignParentBottom="true"
+                        android:layout_margin="15dp"
+                        android:src="@drawable/ic_music" />
 
                 </RelativeLayout>
 
@@ -152,81 +154,77 @@
 
             <LinearLayout
                 android:id="@+id/layLiner1"
-                android:layout_marginTop="20dp"
-                android:layout_below="@+id/layLiner"
                 android:layout_width="match_parent"
                 android:layout_height="100dp"
+                android:layout_below="@+id/layLiner"
                 android:layout_marginHorizontal="15dp"
+                android:layout_marginTop="20dp"
                 android:weightSum="3">
 
                 <RelativeLayout
-                    android:id="@+id/clickAudio"
+                    android:id="@+id/clickDocument"
                     android:layout_width="0dp"
-                    android:layout_marginHorizontal="8dp"
                     android:layout_height="match_parent"
+                    android:layout_marginHorizontal="8dp"
                     android:layout_weight="1"
-                    android:backgroundTint="@color/bgMusic"
-                    android:background="@drawable/weight_bg">
+                    android:background="@drawable/weight_bg"
+                    android:backgroundTint="@color/bgDoc">
 
                     <TextView
-                        android:id="@+id/t4"
+                        android:id="@+id/t3"
                         android:layout_width="wrap_content"
-                        android:text="Audio\nRecover"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="3dp"
                         android:fontFamily="@font/a_500"
                         android:includeFontPadding="false"
-                        android:layout_marginEnd="5dp"
                         android:maxLines="2"
-                        
-                        
-
-                        android:textColor="@color/black"
-                        android:layout_marginTop="10dp"
-                        android:layout_marginStart="15dp"
-                        android:layout_height="wrap_content"/>
+                        android:text="Document\nRecover"
+                        android:textColor="@color/black" />
 
                     <ImageView
                         android:layout_width="30dp"
-                        android:src="@drawable/ic_music"
-                        android:layout_margin="15dp"
-                        android:layout_alignParentBottom="true"
+                        android:layout_height="30dp"
                         android:layout_alignParentEnd="true"
-                        android:layout_height="30dp"/>
+                        android:layout_alignParentBottom="true"
+                        android:layout_margin="15dp"
+                        android:src="@drawable/ic_file" />
 
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/clickContact"
-                    android:layout_marginHorizontal="8dp"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
+                    android:layout_marginHorizontal="8dp"
                     android:layout_weight="1"
-                    android:backgroundTint="@color/bgContact"
-                    android:background="@drawable/weight_bg">
+                    android:background="@drawable/weight_bg"
+                    android:backgroundTint="@color/bgContact">
 
                     <TextView
                         android:id="@+id/t5"
                         android:layout_width="wrap_content"
-                        android:text="Contact\nRecover"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="15dp"
+                        android:layout_marginTop="10dp"
+
+                        android:layout_marginEnd="5dp"
                         android:fontFamily="@font/a_500"
                         android:includeFontPadding="false"
 
-                        android:textColor="@color/black"
-                        android:maxLines="2"
-                        android:layout_marginEnd="5dp"
-                        
-                        
 
-                        android:layout_marginTop="10dp"
-                        android:layout_marginStart="15dp"
-                        android:layout_height="wrap_content"/>
+                        android:maxLines="2"
+                        android:text="Contact\nRecover"
+                        android:textColor="@color/black" />
 
                     <ImageView
                         android:layout_width="30dp"
-                        android:src="@drawable/ic_contact"
-                        android:layout_margin="15dp"
-                        android:layout_alignParentBottom="true"
+                        android:layout_height="30dp"
                         android:layout_alignParentEnd="true"
-                        android:layout_height="30dp"/>
+                        android:layout_alignParentBottom="true"
+                        android:layout_margin="15dp"
+                        android:src="@drawable/ic_contact" />
 
                 </RelativeLayout>
 
@@ -234,49 +232,49 @@
 
             <RelativeLayout
                 android:id="@+id/clickRecyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
                 android:layout_below="@+id/layLiner1"
                 android:layout_margin="20dp"
-                android:backgroundTint="@color/bgRecycler"
                 android:background="@drawable/weight_bg"
-                android:layout_width="match_parent"
-                android:layout_height="80dp">
+                android:backgroundTint="@color/bgRecycler">
 
                 <ImageView
                     android:id="@+id/img1"
                     android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="20dp"
-                    android:src="@drawable/ic_recycler"
-                    android:layout_height="35dp"/>
+                    android:src="@drawable/ic_recycler" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:orientation="vertical"
-                    android:layout_marginStart="20dp"
+                    android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
+                    android:layout_marginStart="20dp"
                     android:layout_toEndOf="@+id/img1"
-                    android:layout_height="wrap_content">
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/t6"
                         android:layout_width="wrap_content"
-                        android:text="Recycle Bin"
+                        android:layout_height="wrap_content"
                         android:fontFamily="@font/a_500"
                         android:includeFontPadding="false"
-                        android:textSize="16sp"
+                        android:text="Recycle Bin"
                         android:textColor="@color/black"
-                        android:layout_height="wrap_content"/>
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/t7"
                         android:layout_width="wrap_content"
-                        android:text="Deleted file are restores here"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
                         android:fontFamily="@font/a_500"
                         android:includeFontPadding="false"
-                        android:textSize="16sp"
+                        android:text="Deleted file are restores here"
                         android:textColor="#7E7E7E"
-                        android:layout_marginTop="5dp"
-                        android:layout_height="wrap_content"/>
+                        android:textSize="16sp" />
 
                 </LinearLayout>
 
@@ -284,50 +282,50 @@
 
             <RelativeLayout
                 android:id="@+id/clickJunk"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
                 android:layout_below="@+id/clickRecyclerView"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginBottom="10dp"
-                android:backgroundTint="@color/bgJunk"
                 android:background="@drawable/weight_bg"
-                android:layout_width="match_parent"
-                android:layout_height="80dp">
+                android:backgroundTint="@color/bgJunk">
 
                 <ImageView
                     android:id="@+id/img2"
                     android:layout_width="35dp"
+                    android:layout_height="35dp"
                     android:layout_centerVertical="true"
                     android:layout_marginStart="20dp"
-                    android:src="@drawable/ic_junk"
-                    android:layout_height="35dp"/>
+                    android:src="@drawable/ic_junk" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:orientation="vertical"
-                    android:layout_marginStart="20dp"
+                    android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
+                    android:layout_marginStart="20dp"
                     android:layout_toEndOf="@+id/img2"
-                    android:layout_height="wrap_content">
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/t8"
                         android:layout_width="wrap_content"
-                        android:text="Junk Remover"
+                        android:layout_height="wrap_content"
                         android:fontFamily="@font/a_500"
                         android:includeFontPadding="false"
-                        android:textSize="16sp"
+                        android:text="Junk Remover"
                         android:textColor="@color/black"
-                        android:layout_height="wrap_content"/>
+                        android:textSize="16sp" />
 
                     <TextView
                         android:id="@+id/t9"
                         android:layout_width="wrap_content"
-                        android:text="Remover junk file here"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
                         android:fontFamily="@font/a_500"
                         android:includeFontPadding="false"
-                        android:textSize="16sp"
+                        android:text="Remover junk file here"
                         android:textColor="#7E7E7E"
-                        android:layout_marginTop="5dp"
-                        android:layout_height="wrap_content"/>
+                        android:textSize="16sp" />
 
                 </LinearLayout>
 

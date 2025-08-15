@@ -5,6 +5,7 @@ import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.widget.Toast
 import com.Blue.photorecovery.R
+import java.util.Locale
 
 object AppUtils {
     const val RATE_APP_LINK = "https://play.google.com/store/apps/details?id="

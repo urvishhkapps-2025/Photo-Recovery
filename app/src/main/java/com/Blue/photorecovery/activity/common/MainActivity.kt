@@ -1,10 +1,11 @@
-package com.Blue.photorecovery.activity
+package com.Blue.photorecovery.activity.common
 
 import android.content.Intent
 import android.graphics.LinearGradient
 import android.graphics.Shader
 import android.os.Bundle
 import android.util.TypedValue
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.toColorInt
 import androidx.core.net.toUri
@@ -30,6 +31,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.apply {
+
+            val callback = object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+
+                }
+            }
+            onBackPressedDispatcher.addCallback(this@MainActivity, callback)
 
             txt1.setTextSize(TypedValue.COMPLEX_UNIT_PX, 60f)
             txt2.setTextSize(TypedValue.COMPLEX_UNIT_PX, 80f)

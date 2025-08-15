@@ -13,6 +13,6 @@
     <color name="bgRecycler">#E3F5FF</color>
     <color name="bgJunk">#F9E6FF</color>
 
-
+    <color name="transparent_color">#00ffffff</color>
 
 </resources>

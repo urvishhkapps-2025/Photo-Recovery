@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/bg_permission"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/btnClose"
+            android:layout_width="32dp"
+            android:src="@drawable/ic_cross"
+            android:layout_margin="20dp"
+            android:padding="5dp"
+            android:layout_height="32dp"/>
+
+        <TextView
+            android:id="@+id/textPermission"
+            android:layout_marginTop="25dp"
+            android:layout_width="wrap_content"
+            android:text="Permission Request"
+            android:textSize="26sp"
+            android:includeFontPadding="false"
+            android:textColor="@color/black"
+            android:fontFamily="@font/a_500"
+            android:layout_toEndOf="@+id/btnClose"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/textTitle"
+            android:layout_width="wrap_content"
+            android:text="Premission Is Required To Access All Files"
+            android:textSize="26sp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="10dp"
+            android:includeFontPadding="false"
+            android:fontFamily="@font/a_700"
+            android:textColor="@color/black"
+            android:layout_below="@+id/btnClose"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/textDescription"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="20dp"
+            android:layout_width="wrap_content"
+            android:text="Easy Recovery Requires Full Access To Your Device Storage To Locate And Recover Deleted Or Lost Files."
+            android:textSize="20sp"
+            android:includeFontPadding="false"
+            android:textColor="@color/black"
+            android:fontFamily="@font/a_500"
+            android:layout_below="@+id/textTitle"
+            android:layout_height="wrap_content"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_below="@+id/textDescription"
+            android:src="@drawable/img_per_new"
+            android:layout_marginHorizontal="20dp"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/btnAgree"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="30dp"
+            android:background="@drawable/btn_bg"
+            android:fontFamily="@font/a_400"
+            android:gravity="center"
+            android:includeFontPadding="false"
+            android:text="Agree"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

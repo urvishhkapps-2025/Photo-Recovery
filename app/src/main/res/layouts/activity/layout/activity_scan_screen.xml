@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".activity.PhotoRecover">
+    tools:context=".activity.common.ScanScreen">
 
     <RelativeLayout
         android:id="@+id/layToolbar"
@@ -56,12 +56,14 @@
 
                 <TextView
                     android:id="@+id/clickScan"
-                    android:layout_width="wrap_content"
-                    android:text="SCAN"
+                    android:layout_width="match_parent"
+                    android:text="Tap"
+                    android:gravity="center"
+                    android:layout_margin="30dp"
                     android:fontFamily="@font/a_700"
                     android:includeFontPadding="false"
                     android:layout_centerInParent="true"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="match_parent"/>
 
             </RelativeLayout>
 

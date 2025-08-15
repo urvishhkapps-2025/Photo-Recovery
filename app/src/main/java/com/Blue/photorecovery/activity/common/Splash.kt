@@ -1,4 +1,4 @@
-package com.Blue.photorecovery.activity
+package com.Blue.photorecovery.activity.common
 
 import android.content.Intent
 import android.os.Bundle
