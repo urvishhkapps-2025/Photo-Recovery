@@ -15,8 +15,12 @@ import com.Blue.photorecovery.databinding.ActivityPreparingToScanBinding
 import com.Blue.photorecovery.storage.images.GetAllImagesFolder.humanBytes
 import com.Blue.photorecovery.storage.images.GetAllImagesFolder.scanAllImagesFromFileSystem
 import com.Blue.photorecovery.storage.images.GetAllImagesFromFolder.loadImagesInFolder
+import com.Blue.photorecovery.storage.scan.ScanImages
+import com.Blue.photorecovery.storage.images.buildSectionsTop3
 import com.Blue.photorecovery.storage.scan.ScanCache
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class PreparingToScan : AppCompatActivity() {
 
@@ -91,16 +95,11 @@ class PreparingToScan : AppCompatActivity() {
             val count = result.totalCount
             val totalSize = humanBytes(result.totalBytes)
             val folders = result.folders
+            val sections = withContext(Dispatchers.Default) {
+                buildSectionsTop3(result.folders, result.images)
+            }
+            ScanImages.sections = sections
 
-//            val sections: List<FolderSection> = withContext(Dispatchers.IO) {
-//                folders.map { folder ->
-//                    val uris = loadImagesInFolder(this@PreparingToScan, folder, emptyList(), true)
-//                        .take(3)
-//                        .map { it.uri }                    // size 0..3
-//                    FolderSection(folder, uris)
-//                }
-//            }
-//            ScanImages.sections = sections
 
             val imagesInFirstFolder = loadImagesInFolder(this@PreparingToScan, folders[0])
 

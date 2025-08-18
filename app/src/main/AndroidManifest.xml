@@ -32,6 +32,11 @@
         android:theme="@style/Theme.PhotoRecovery"
         tools:targetApi="29">
         <activity
+            android:name=".activity.storage.RecoverDetails"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".activity.storage.PreparingToScan"
             android:exported="true"
             android:launchMode="singleTop"

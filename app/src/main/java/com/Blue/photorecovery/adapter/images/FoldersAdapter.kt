@@ -1,5 +1,7 @@
 package com.Blue.photorecovery.adapter.images
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.net.Uri
 import android.util.Log
 import android.util.TypedValue
@@ -11,8 +13,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.Blue.photorecovery.R
 import com.Blue.photorecovery.storage.images.FolderSection
+import com.bumptech.glide.Glide
 
 class FoldersAdapter(
+    private val activity: Activity,
     private val items: List<FolderSection>,
     private val onClick: (FolderSection) -> Unit
 ) : RecyclerView.Adapter<FoldersAdapter.VH>() {
@@ -32,26 +36,17 @@ class FoldersAdapter(
 
     override fun getItemCount() = items.size
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(h: VH, pos: Int) {
-        h.setIsRecyclable(false)
+
         val sec = items[pos]
         h.textFolderName.text = sec.folder.displayName.replace(".", "") + "(${sec.folder.count})"
         h.textFolderName.setTextSize(TypedValue.COMPLEX_UNIT_PX, 50f)
-        Log.i("TAG", "onBindViewHolder: " + sec)
-        fun bindThumb(imgView: ImageView, uri: Uri?) {
-            Log.i("TAG", "bindThumb: " + uri)
-            if (uri == null) {
-                imgView.visibility = View.GONE
-            } else {
-                imgView.visibility = View.VISIBLE
-                imgView.setImageURI(uri)
-//                imgView.load(uri) { crossfade(true) }// or Coil: imgView.load(uri) { crossfade(true) }
-            }
-        }
 
         bindThumb(h.imgFirst, sec.thumbs.getOrNull(0))
         bindThumb(h.imgSecond, sec.thumbs.getOrNull(1))
         bindThumb(h.imgThird, sec.thumbs.getOrNull(2))
+
 
 //        val f = items[pos]
 //
@@ -87,4 +82,22 @@ class FoldersAdapter(
 
 
     }
+
+    @SuppressLint("CheckResult")
+    fun bindThumb(imgView: ImageView, uri: Uri?) {
+        if (uri == null) {
+            imgView.visibility = View.GONE
+        } else {
+            Log.i("TAG", "bindThumb: " + uri)
+            Glide.with(activity).load(uri).into(imgView)
+            imgView.visibility = View.VISIBLE
+//            imgView.load(uri) {
+//                crossfade(true)
+//                // Coil auto-sizes to the ImageView; you can also add .placeholder() if you like
+//            }
+//            imgView.setImageURI(uri)
+        }
+
+    }
+
 }

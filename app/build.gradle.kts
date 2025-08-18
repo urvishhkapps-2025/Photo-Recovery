@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.annotationProcessor
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -79,7 +81,7 @@ dependencies {
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(libs.androidx.multidex)
-    implementation(libs.coil)
+//    implementation(libs.coil)
 
     /***********************************
      ******** Lottie Animation *********
@@ -90,5 +92,11 @@ dependencies {
      ******** Shimmer Animation *********
      ***********************************/
     implementation(libs.shimmer)
+
+    /************************
+     ******** Glide *********
+     ************************/
+    implementation(libs.glide)
+    annotationProcessor (libs.compiler)
 
 }
