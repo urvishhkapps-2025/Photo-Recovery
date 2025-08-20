@@ -2,9 +2,7 @@ package com.Blue.photorecovery.activity.storage
 
 import ImageItem
 import android.annotation.SuppressLint
-import android.app.Activity
-import android.content.Context
-import android.net.Uri
+import android.graphics.Rect
 import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
@@ -28,8 +26,10 @@ import com.Blue.photorecovery.common.LoadingDialog
 import com.Blue.photorecovery.common.UserDataManager
 import com.Blue.photorecovery.databinding.ActivityRecoverDetailsBinding
 import com.Blue.photorecovery.storage.images.GetAllImagesFromFolder.loadImagesInFolder
+import com.Blue.photorecovery.storage.images.deleteImagesPermanently
 import com.Blue.photorecovery.storage.scan.ScanImages
 import com.Blue.photorecovery.storage.scan.sizeBytesOrNull
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.time.ZoneId
@@ -112,8 +112,30 @@ class RecoverDetails : AppCompatActivity() {
                         if (it) {
                             showLoading()
                             val selected = adapter?.getSelectedItems().orEmpty()
-                            val imagesToDelete: List<Uri> = selected.map { it.uri }
-
+                            lifecycleScope.launch {
+                                deleteImagesPermanently(this@RecoverDetails, selected) { success ->
+                                    if (success) {
+                                        Toast.makeText(
+                                            this@RecoverDetails,
+                                            "Images deleted",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        lifecycleScope.launch {
+                                            val folderPath = result[0].folder
+                                            selectedFolder = folderPath.toString()
+                                            allImagesInFolder = loadImagesInFolder(this@RecoverDetails, folderPath)
+                                            applySizeFilterAndSubmit()
+                                        }
+                                    } else {
+                                        Toast.makeText(
+                                            this@RecoverDetails,
+                                            "Failed to delete some images",
+                                            Toast.LENGTH_SHORT
+                                        ).show()
+                                        hideLoading()
+                                    }
+                                }
+                            }
                         }
                     }
                     dialog.isCancelable = false
@@ -161,7 +183,7 @@ class RecoverDetails : AppCompatActivity() {
 
             class GridSpace(private val space: Int) : RecyclerView.ItemDecoration() {
                 override fun getItemOffsets(
-                    outRect: android.graphics.Rect,
+                    outRect: Rect,
                     v: View,
                     parent: RecyclerView,
                     state: RecyclerView.State
@@ -232,7 +254,7 @@ class RecoverDetails : AppCompatActivity() {
         lifecycleScope.launch {
             val imagesToShow =
                 if (!isLow) allImagesInFolder
-                else withContext(kotlinx.coroutines.Dispatchers.IO) {
+                else withContext(Dispatchers.IO) {
                     allImagesInFolder.filter {
                         (it.sizeBytesOrNull(this@RecoverDetails) ?: 0L) >= oneMB
                     }
@@ -256,7 +278,8 @@ class RecoverDetails : AppCompatActivity() {
             adapter!!.submitList(rows)
             adapter?.deselectAll()
             adapter!!.notifyDataSetChanged()
-            binding.recyclerView.scrollToPosition(0)
+//            binding.recyclerView.scrollToPosition(0)
+            hideLoading()
         }
     }
 

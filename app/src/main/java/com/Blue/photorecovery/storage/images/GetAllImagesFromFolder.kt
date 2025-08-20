@@ -22,7 +22,7 @@ object GetAllImagesFromFolder {
         context: Context,
         folder: ImageFolder,
         safTrees: List<Uri> = emptyList(),
-        includeSubdirs: Boolean = true
+        includeSubdirs: Boolean = false
     ): List<ImageItem> = withContext(Dispatchers.IO) {
 
         when {

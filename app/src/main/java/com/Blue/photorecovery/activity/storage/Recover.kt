@@ -14,10 +14,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.Blue.photorecovery.R
 import com.Blue.photorecovery.adapter.images.FoldersAdapter
 import com.Blue.photorecovery.databinding.ActivityRecoverBinding
+import com.Blue.photorecovery.storage.images.GetAllImagesFolder.humanBytes
+import com.Blue.photorecovery.storage.images.GetAllImagesFolder.scanAllImagesFromFileSystem
+import com.Blue.photorecovery.storage.images.buildSectionsTop3
 import com.Blue.photorecovery.storage.scan.ScanCache
 import com.Blue.photorecovery.storage.scan.ScanImages
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 @Suppress("UNCHECKED_CAST")
 class Recover : AppCompatActivity() {
@@ -38,7 +42,6 @@ class Recover : AppCompatActivity() {
             finish()
         }
 
-
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 finish()
@@ -47,7 +50,11 @@ class Recover : AppCompatActivity() {
         onBackPressedDispatcher.addCallback(this@Recover, callback)
 
         binding.txt1.setTextSize(TypedValue.COMPLEX_UNIT_PX, 55f)
+        setAdapter()
 
+    }
+
+    fun setAdapter(){
         val result = ScanImages.sections
         binding.recyclerViewForItem.apply {
             layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false).also {
@@ -64,11 +71,19 @@ class Recover : AppCompatActivity() {
             isNestedScrollingEnabled = false
             itemAnimator = null
         }
-
-        lifecycleScope.launch(Dispatchers.IO) {
-
-
-        }
-
     }
+
+    override fun onResume() {
+        super.onResume()
+        lifecycleScope.launch {
+            val result = scanAllImagesFromFileSystem(this@Recover)
+            ScanCache.result = result
+            val sections = withContext(Dispatchers.Default) {
+                buildSectionsTop3(result.folders, result.images)
+            }
+            ScanImages.sections = sections
+            setAdapter()
+        }
+    }
+
 }
