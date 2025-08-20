@@ -29,8 +29,9 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:enableOnBackInvokedCallback="true"
         android:theme="@style/Theme.PhotoRecovery"
-        tools:targetApi="29">
+        tools:targetApi="33">
         <activity
             android:name=".activity.storage.RecoverDetails"
             android:exported="true"

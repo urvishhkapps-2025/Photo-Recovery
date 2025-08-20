@@ -6,18 +6,18 @@ data class ImageItem(
     val name: String?,
     val sizeBytes: Long,
     val dateTakenMillis: Long?,
-    val bucketId: Long?,          // null for FS scan
+    val bucketId: Long?,
     val bucketName: String?,
-    val relativePath: String?,    // path relative to volume root
-    val isTrashed: Boolean,       // false for FS scan
-    val volume: String            // e.g., "fs:primary" or "fs:XXXX-XXXX"
+    val relativePath: String?,
+    val isTrashed: Boolean,
+    val volume: String
 )
 
 data class ImageFolder(
     val key: String,
     val displayName: String,
     val volume: String,
-    val bucketId: Long?,          // null for FS scan
+    val bucketId: Long?,
     val relativePath: String?,
     var count: Int = 0,
     var totalBytes: Long = 0,

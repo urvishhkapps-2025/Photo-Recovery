@@ -49,7 +49,7 @@ class PreparingToScan : AppCompatActivity() {
 
             startShimmer()
 
-            txt1.setTextSize(TypedValue.COMPLEX_UNIT_PX, 60f)
+            txt1.setTextSize(TypedValue.COMPLEX_UNIT_PX, 55f)
             text3.setTextSize(TypedValue.COMPLEX_UNIT_PX, 60f)
             textTotalImage.setTextSize(TypedValue.COMPLEX_UNIT_PX, 50f)
             textFile.setTextSize(TypedValue.COMPLEX_UNIT_PX, 40f)

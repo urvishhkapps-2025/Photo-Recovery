@@ -3,7 +3,6 @@ package com.Blue.photorecovery.adapter.images
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.net.Uri
-import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -47,23 +46,6 @@ class FoldersAdapter(
         bindThumb(h.imgSecond, sec.thumbs.getOrNull(1))
         bindThumb(h.imgThird, sec.thumbs.getOrNull(2))
 
-
-//        val f = items[pos]
-//
-//        if (items[0].count != null) {
-//            h.imgFirst.setImageURI(f.coverUri)
-//        }
-//        if (items[1] != null) {
-//            h.imgSecond.setImageURI(f.coverUri)
-//        } else {
-//            h.imgSecond.visibility = View.GONE
-//        }
-//        if (items[2] != null) {
-//            h.imgThird.setImageURI(f.coverUri)
-//        } else {
-//            h.imgThird.visibility = View.GONE
-//        }
-
         h.btnNext.setOnClickListener {
             onClick(items[pos])
         }
@@ -88,14 +70,8 @@ class FoldersAdapter(
         if (uri == null) {
             imgView.visibility = View.GONE
         } else {
-            Log.i("TAG", "bindThumb: " + uri)
             Glide.with(activity).load(uri).into(imgView)
             imgView.visibility = View.VISIBLE
-//            imgView.load(uri) {
-//                crossfade(true)
-//                // Coil auto-sizes to the ImageView; you can also add .placeholder() if you like
-//            }
-//            imgView.setImageURI(uri)
         }
 
     }

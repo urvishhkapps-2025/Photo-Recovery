@@ -15,4 +15,9 @@
 
     <color name="transparent_color">#00ffffff</color>
 
+    <color name="switch_background">#B8B8B8</color>
+    <color name="only_blue">#014740</color>
+
+    <color name="black_70_per">#4C000000</color>
+
 </resources>

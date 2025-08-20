@@ -31,7 +31,7 @@ class Privacy : AppCompatActivity() {
 
         binding.apply {
 
-            txt1.setTextSize(TypedValue.COMPLEX_UNIT_PX, 60f)
+            txt1.setTextSize(TypedValue.COMPLEX_UNIT_PX, 55f)
 
             btnBack.setOnClickListener {
                 finish()

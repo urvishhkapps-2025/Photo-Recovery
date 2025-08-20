@@ -1,5 +1,6 @@
 package com.Blue.photorecovery.activity.storage
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.Blue.photorecovery.R
 import com.Blue.photorecovery.adapter.images.FoldersAdapter
 import com.Blue.photorecovery.databinding.ActivityRecoverBinding
+import com.Blue.photorecovery.storage.scan.ScanCache
 import com.Blue.photorecovery.storage.scan.ScanImages
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -44,7 +46,7 @@ class Recover : AppCompatActivity() {
         }
         onBackPressedDispatcher.addCallback(this@Recover, callback)
 
-        binding.txt1.setTextSize(TypedValue.COMPLEX_UNIT_PX, 60f)
+        binding.txt1.setTextSize(TypedValue.COMPLEX_UNIT_PX, 55f)
 
         val result = ScanImages.sections
         binding.recyclerViewForItem.apply {
@@ -52,16 +54,12 @@ class Recover : AppCompatActivity() {
                 it.initialPrefetchItemCount = 8
             }
             adapter = FoldersAdapter(this@Recover,result) { clicked ->
-//                lifecycleScope.launch {
-//                    val images: List<ImageItem> = loadImagesInFolder(
-//                        context = this@Recover,
-//                        folder = clicked,
-//                        safTrees = emptyList(),
-//                        includeSubdirs = true
-//                    )
-                // TODO: show these images (e.g., open a new Activity with an ImagesAdapter)
-//                }
+                ScanImages.sections = listOf(clicked)
+                val intent = Intent(this@Recover, RecoverDetails::class.java)
+                intent.putExtra("count", 1)
+                startActivity(intent)
             }
+
             setHasFixedSize(true)
             isNestedScrollingEnabled = false
             itemAnimator = null

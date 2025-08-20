@@ -28,4 +28,10 @@
     </style>
     <!-- Bottom Sheet Dialog End -->
 
+    <style name="PurchaseDialogAnimation">
+        <item name="android:windowEnterAnimation">@anim/admin_fade_in_purchase</item>
+        <item name="android:windowExitAnimation">@anim/admin_fade_out_purchase</item>
+    </style>
+
+
 </resources>

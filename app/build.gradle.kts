@@ -75,18 +75,21 @@ dependencies {
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
+    implementation(libs.androidx.activity.ktx)
     implementation(libs.androidx.constraintlayout)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 
     implementation(libs.androidx.multidex)
-//    implementation(libs.coil)
 
-    /***********************************
-     ******** Lottie Animation *********
-     ***********************************/
+    /*****************************
+     ********  Animation *********
+     *****************************/
     implementation(libs.lottie)
+    implementation("com.daimajia.easing:library:2.4@aar")
+    implementation("com.daimajia.androidanimations:library:2.4@aar")
+
 
     /***********************************
      ******** Shimmer Animation *********
@@ -98,5 +101,12 @@ dependencies {
      ************************/
     implementation(libs.glide)
     annotationProcessor (libs.compiler)
+
+    /***********************
+     ******** Gson *********
+     ***********************/
+    implementation(libs.gson)
+
+    implementation(libs.androidx.documentfile)
 
 }

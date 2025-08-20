@@ -7,21 +7,21 @@ data class VideoItem(
     val uri: Uri,
     val name: String?,
     val sizeBytes: Long,
-    val durationMs: Long?,        // null if not fetched
+    val durationMs: Long?,        
     val dateTakenMillis: Long?,
-    val bucketId: Long?,          // null for FS/SAF
+    val bucketId: Long?,         
     val bucketName: String?,
-    val relativePath: String?,    // e.g., "Movies/WhatsApp Video/"
-    val isTrashed: Boolean,       // true only when includeTrash && API 30+ (MediaStore)
-    val volume: String            // e.g., "external_primary", "XXXX-XXXX", "fs:primary", "saf:WhatsApp"
+    val relativePath: String?,    
+    val isTrashed: Boolean,       
+    val volume: String            
 )
 
 data class VideoFolder(
-    val key: String,              // unique (source + volume + bucket/rel)
-    val displayName: String,      // shown to user (e.g., "WhatsApp Video")
+    val key: String,             
+    val displayName: String,     
     val volume: String,
-    val bucketId: Long?,          // null for FS/SAF
-    val relativePath: String?,    // for API 29+ or FS/SAF path hint
+    val bucketId: Long?,         
+    val relativePath: String?,    
     var count: Int = 0,
     var totalBytes: Long = 0,
     var coverUri: Uri? = null,

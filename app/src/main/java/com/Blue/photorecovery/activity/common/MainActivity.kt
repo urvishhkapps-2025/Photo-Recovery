@@ -39,7 +39,7 @@ class MainActivity : AppCompatActivity() {
             }
             onBackPressedDispatcher.addCallback(this@MainActivity, callback)
 
-            txt1.setTextSize(TypedValue.COMPLEX_UNIT_PX, 60f)
+            txt1.setTextSize(TypedValue.COMPLEX_UNIT_PX, 55f)
             txt2.setTextSize(TypedValue.COMPLEX_UNIT_PX, 80f)
             textOfScreen.setTextSize(TypedValue.COMPLEX_UNIT_PX, 45f)
             t1.setTextSize(TypedValue.COMPLEX_UNIT_PX, 40f)

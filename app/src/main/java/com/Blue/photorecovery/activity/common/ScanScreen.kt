@@ -68,7 +68,7 @@ class ScanScreen : AppCompatActivity() {
                 textDescription.text = "Tap to scan All Audio"
             }
 
-            textTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, 60f)
+            textTitle.setTextSize(TypedValue.COMPLEX_UNIT_PX, 55f)
             textDescription.setTextSize(TypedValue.COMPLEX_UNIT_PX, 60f)
             clickScan.setTextSize(TypedValue.COMPLEX_UNIT_PX, 80f)
 

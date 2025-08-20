@@ -46,7 +46,7 @@ class AllFileRecovery : AppCompatActivity() {
 
         binding.apply {
 
-            txt1.setTextSize(TypedValue.COMPLEX_UNIT_PX, 60f)
+            txt1.setTextSize(TypedValue.COMPLEX_UNIT_PX, 55f)
             t1.setTextSize(TypedValue.COMPLEX_UNIT_PX, 40f)
             t2.setTextSize(TypedValue.COMPLEX_UNIT_PX, 40f)
             t3.setTextSize(TypedValue.COMPLEX_UNIT_PX, 40f)
