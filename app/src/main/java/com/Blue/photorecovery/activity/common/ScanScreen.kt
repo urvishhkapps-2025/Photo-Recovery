@@ -6,7 +6,6 @@ import android.graphics.Shader
 import android.os.Bundle
 import android.util.TypedValue
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.result.ActivityResultLauncher
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.toColorInt
 import androidx.core.view.ViewCompat
@@ -17,12 +16,11 @@ import com.Blue.photorecovery.R
 import com.Blue.photorecovery.activity.storage.PreparingToScan
 import com.Blue.photorecovery.announcement.Canny
 import com.Blue.photorecovery.databinding.ActivityScanScreenBinding
-import com.Blue.photorecovery.storage.scan.AllFilesPermission
+import com.Blue.photorecovery.utils.PermissionUtils
 
 class ScanScreen : AppCompatActivity() {
 
     private lateinit var binding: ActivityScanScreenBinding
-    private lateinit var storagePermsLauncher: ActivityResultLauncher<Array<String>>
     var count = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,9 +33,6 @@ class ScanScreen : AppCompatActivity() {
             insets
         }
 
-        storagePermsLauncher = AllFilesPermission.createStoragePermsLauncher(this) { grants ->
-            AllFilesPermission.hasAllFilesAccess(this)
-        }
 
         binding.apply {
 
@@ -86,8 +81,8 @@ class ScanScreen : AppCompatActivity() {
             clickScan.paint.shader = textShader
 
             clickScan.setOnClickListener {
-                val hasAllFiles = AllFilesPermission.hasAllFilesAccess(this@ScanScreen)
-                if (!hasAllFiles) {
+                val hasPermission = PermissionUtils.isStoragePermissionGranted(this@ScanScreen)
+                if (!hasPermission) {
                     getPermission()
                 } else {
                     val intent = Intent(this@ScanScreen, PreparingToScan::class.java)
@@ -106,7 +101,7 @@ class ScanScreen : AppCompatActivity() {
             val fm: FragmentManager = supportFragmentManager
             val canny = Canny(this@ScanScreen) {
                 if (it) {
-                    AllFilesPermission.requestAllFilesAccess(this@ScanScreen, storagePermsLauncher)
+                    PermissionUtils.openAppSettingsForPermission(this@ScanScreen)
                 }
             }
             canny.isCancelable = false

@@ -1,7 +1,6 @@
 package com.Blue.photorecovery.common
 
 import android.annotation.SuppressLint
-import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import com.Blue.photorecovery.R
@@ -75,12 +75,10 @@ class LoadingDialog : DialogFragment() {
                 dialog!!.window!!.attributes.windowAnimations = R.style.PurchaseDialogAnimation
                 dialog!!.window!!
                     .setBackgroundDrawable(
-                        ColorDrawable(
-                            ContextCompat.getColor(
-                                (activity)!!,
-                                R.color.transparent_color
-                            )
-                        )
+                        ContextCompat.getColor(
+                            (activity)!!,
+                            R.color.transparent_color
+                        ).toDrawable()
                     )
                 dialog!!.window!!.clearFlags(1024)
             }

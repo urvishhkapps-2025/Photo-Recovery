@@ -2,30 +2,43 @@ package com.Blue.photorecovery.activity.storage
 
 import android.annotation.SuppressLint
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.os.Environment
 import android.util.TypedValue
 import android.view.View
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import com.Blue.photorecovery.R
+import com.Blue.photorecovery.adapter.common.ScanAdapter
 import com.Blue.photorecovery.databinding.ActivityPreparingToScanBinding
-import com.Blue.photorecovery.storage.images.GetAllImagesFolder.humanBytes
-import com.Blue.photorecovery.storage.images.GetAllImagesFolder.scanAllImagesFromFileSystem
-import com.Blue.photorecovery.storage.images.GetAllImagesFromFolder.loadImagesInFolder
-import com.Blue.photorecovery.storage.scan.ScanImages
-import com.Blue.photorecovery.storage.images.buildSectionsTop3
-import com.Blue.photorecovery.storage.scan.ScanCache
+import com.Blue.photorecovery.storage.images.FolderItem
+import com.Blue.photorecovery.storage.images.ImageUtils
+import com.Blue.photorecovery.storage.images.ImageUtils.humanBytes
+import com.Blue.photorecovery.storage.scan.ScanResult
+import com.Blue.photorecovery.storage.scan.ScanResultManager
+import com.Blue.photorecovery.storage.video.VideoUtils
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 class PreparingToScan : AppCompatActivity() {
 
     private lateinit var binding: ActivityPreparingToScanBinding
+
     var count = 1
+    var adapter: ScanAdapter? = null
+    private var totalImages = 0
+    private var totalSizeBytes = 0L
+    private var totalFolders = 0
+    private var firstFolderImages: List<Uri> = emptyList()
 
 
     @SuppressLint("SetTextI18n", "SuspiciousIndentation")
@@ -39,15 +52,27 @@ class PreparingToScan : AppCompatActivity() {
             insets
         }
 
-        count = intent.getIntExtra("count", 1)
-        scanAllImages()
         binding.apply {
 
-            loaderSplash.loop(true)
-            loaderSplash.setAnimation(R.raw.time)
-            loaderSplash.playAnimation()
+            count = intent.getIntExtra("count", 1)
+            if (count == 1) {
+                startScanningImages()
+                adapter = ScanAdapter(1)
+                loaderSplash.setAnimation(R.raw.scan_image)
+            } else if (count == 2) {
+                vidFirst.visibility = View.VISIBLE
+                vidSecond.visibility = View.VISIBLE
+                vidThird.visibility = View.VISIBLE
+                vidFourth.visibility = View.VISIBLE
+                adapter = ScanAdapter(2)
+                loaderSplash.setAnimation(R.raw.scan_video)
+                startScanningVideos()
+            }
 
-            startShimmer()
+            scanRecycler.adapter = adapter
+
+            loaderSplash.loop(true)
+            loaderSplash.playAnimation()
 
             txt1.setTextSize(TypedValue.COMPLEX_UNIT_PX, 55f)
             text3.setTextSize(TypedValue.COMPLEX_UNIT_PX, 60f)
@@ -62,14 +87,6 @@ class PreparingToScan : AppCompatActivity() {
                 finish()
             }
 
-            btnViewResults.setOnClickListener {
-                if (ScanCache.result != null) {
-                    startActivity(Intent(this@PreparingToScan, Recover::class.java))
-                } else {
-                    scanAllImages()
-                }
-            }
-
             val callback = object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     finish()
@@ -77,95 +94,176 @@ class PreparingToScan : AppCompatActivity() {
             }
             onBackPressedDispatcher.addCallback(this@PreparingToScan, callback)
 
-            btnViewResults.setOnClickListener {
-                val intent = Intent(this@PreparingToScan, Recover::class.java)
-                intent.putExtra("count", count)
-                startActivity(intent)
-                finish()
-            }
-
         }
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun scanAllImages() {
-        lifecycleScope.launch {
-            val result = scanAllImagesFromFileSystem(this@PreparingToScan)
-            ScanCache.result = result
-            val count = result.totalCount
-            val totalSize = humanBytes(result.totalBytes)
-            val folders = result.folders
-            val sections = withContext(Dispatchers.Default) {
-                buildSectionsTop3(result.folders, result.images)
+    private fun startScanningImages() {
+        lifecycleScope.launch(Dispatchers.IO) {
+
+            val externalDir = Environment.getExternalStorageDirectory()
+            val imageFolders = ImageUtils.getImageFolders(externalDir)
+
+            val folderItems = mutableListOf<FolderItem>()
+            var firstFolderProcessed = false
+
+            imageFolders.forEachIndexed { index, folder ->
+
+                val images = folder.listFiles()?.filter { it.isFile && ImageUtils.isImageFile(it) }
+                    ?: emptyList()
+
+                if (!firstFolderProcessed && images.isNotEmpty()) {
+                    firstFolderImages = images.take(4).map { it.toUri() }
+                    firstFolderProcessed = true
+
+                    withContext(Dispatchers.Main) {
+                        displayFirstFolderImages(firstFolderImages)
+                    }
+                }
+
+                val folderSize = images.sumOf { it.length() }
+                val coverUris = images.take(4).map { it.toUri() }
+
+                totalImages += images.size
+                totalSizeBytes += folderSize
+
+                val folderItem = FolderItem(
+                    path = folder.absolutePath,
+                    name = folder.name,
+                    imageCount = images.size,
+                    coverUris = coverUris,
+                    lastModified = folder.lastModified(),
+                )
+                folderItems.add(folderItem)
+                delay(30)
             }
-            ScanImages.sections = sections
 
+            val scanResult = ScanResult(
+                totalImages = totalImages,
+                totalSizeBytes = totalSizeBytes,
+                totalFolders = totalFolders,
+                scannedFolders = folderItems,
+                firstFolderImages = firstFolderImages
+            )
 
-            val imagesInFirstFolder = loadImagesInFolder(this@PreparingToScan, folders[0])
+            ScanResultManager.scanResult = scanResult
 
-            binding.apply {
+            withContext(Dispatchers.Main) {
+                imagesShowScanComplete(scanResult)
+            }
+        }
+    }
 
-                stopShimmer()
-                txt1.visibility = View.GONE
-                layScan.visibility = View.GONE
-                layData.visibility = View.VISIBLE
-                loaderSplash.loop(true)
-                loaderSplash.setAnimation(R.raw.done)
-                loaderSplash.repeatCount = 0
-                loaderSplash.playAnimation()
+    private fun startScanningVideos() {
+        lifecycleScope.launch(Dispatchers.IO) {
+            val externalDir = Environment.getExternalStorageDirectory()
+            val videoFolders = VideoUtils.getVideoFolders(externalDir) // Implement this method
 
-                try {
-                    textTotalSize.text = totalSize
-                    textTotalImage.text = count.toString()
-                    textTotalImages.text = "+" + (count - 4).toString()
+            val folderItems = mutableListOf<FolderItem>()
+            var firstFolderProcessed = false
 
-                    imgFirst.setImageURI(imagesInFirstFolder[0].uri)
-                    imgSecond.setImageURI(imagesInFirstFolder[1].uri)
-                    imgThird.setImageURI(imagesInFirstFolder[2].uri)
-                    imgFourth.setImageURI(imagesInFirstFolder[3].uri)
+            videoFolders.forEachIndexed { index, folder ->
+                val videos = folder.listFiles()?.filter { it.isFile && VideoUtils.isVideoFile(it) }
+                    ?: emptyList()
 
-                } catch (e: Exception) {
-                    e.printStackTrace()
+                if (!firstFolderProcessed && videos.isNotEmpty()) {
+                    firstFolderImages = videos.take(4).map { it.toUri() }
+                    firstFolderProcessed = true
+
+                    withContext(Dispatchers.Main) {
+                        displayFirstFolderImages(firstFolderImages)
+                    }
+                }
+
+                val folderSize = videos.sumOf { it.length() }
+                val coverUris = videos.take(4).map { it.toUri() }
+
+                totalImages += videos.size
+                totalSizeBytes += folderSize
+
+                val folderItem = FolderItem(
+                    path = folder.absolutePath,
+                    name = folder.name,
+                    imageCount = videos.size,
+                    coverUris = coverUris,
+                    lastModified = folder.lastModified(),
+                )
+                folderItems.add(folderItem)
+                delay(30)
+            }
+
+            val scanResult = ScanResult(
+                totalImages = totalImages,
+                totalSizeBytes = totalSizeBytes,
+                totalFolders = totalFolders,
+                scannedFolders = folderItems,
+                firstFolderImages = firstFolderImages
+            )
+
+            ScanResultManager.scanResult = scanResult
+
+            withContext(Dispatchers.Main) {
+                imagesShowScanComplete(scanResult)
+            }
+        }
+    }
+
+    private fun displayFirstFolderImages(images: List<Uri>) {
+        images.forEachIndexed { index, uri ->
+            val imageView = when (index) {
+                0 -> binding.imgFirst
+                1 -> binding.imgSecond
+                2 -> binding.imgThird
+                3 -> binding.imgFourth
+                else -> null
+            }
+            imageView?.apply {
+                imageView?.let {
+                    Glide.with(this@PreparingToScan)
+                        .load(uri)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .centerCrop()
+                        .into(it)
+                    it.visibility = View.VISIBLE // Make sure it's visible
                 }
             }
+        }
+        if (images.size < 4) binding.imgFirst.visibility = View.INVISIBLE
+        if (images.size < 4) binding.vidFirst.visibility = View.INVISIBLE
+        if (images.size < 3) binding.imgSecond.visibility = View.INVISIBLE
+        if (images.size < 3) binding.vidSecond.visibility = View.INVISIBLE
+        if (images.size < 2) binding.imgThird.visibility = View.INVISIBLE
+        if (images.size < 2) binding.vidThird.visibility = View.INVISIBLE
+        if (images.isEmpty()) binding.imgFourth.visibility = View.INVISIBLE
+        if (images.isEmpty()) binding.vidFourth.visibility = View.INVISIBLE
+    }
 
+    private fun imagesShowScanComplete(scanResult: ScanResult) {
+
+        binding.textTotalImages.text = "+${scanResult.totalImages - 4}"
+        binding.textTotalImage.text = "${scanResult.totalImages}"
+        val totalSize = humanBytes(scanResult.totalSizeBytes)
+        binding.textTotalSize.text = totalSize
+
+        binding.apply {
+            txt1.visibility = View.GONE
+            layScan.visibility = View.GONE
+            layData.visibility = View.VISIBLE
+            loaderSplash.loop(true)
+            loaderSplash.setAnimation(R.raw.done)
+            loaderSplash.repeatCount = 0
+            loaderSplash.playAnimation()
+        }
+
+        binding.btnViewResults.setOnClickListener {
+            imagesNavigateToMainActivity()
         }
     }
 
-    private fun startShimmer() {
-        binding.apply {
-            shimmer1.startShimmer()
-            shimmer2.startShimmer()
-            shimmer3.startShimmer()
-            shimmer4.startShimmer()
-            shimmer5.startShimmer()
-            shimmer6.startShimmer()
-            shimmer7.startShimmer()
-            shimmer8.startShimmer()
-            shimmer9.startShimmer()
-            shimmer10.startShimmer()
-            shimmer10.startShimmer()
-            shimmer11.startShimmer()
-            shimmer12.startShimmer()
-        }
-    }
-
-    private fun stopShimmer() {
-        binding.apply {
-            shimmer1.stopShimmer()
-            shimmer2.stopShimmer()
-            shimmer3.stopShimmer()
-            shimmer4.stopShimmer()
-            shimmer5.stopShimmer()
-            shimmer6.stopShimmer()
-            shimmer7.stopShimmer()
-            shimmer8.stopShimmer()
-            shimmer9.stopShimmer()
-            shimmer10.stopShimmer()
-            shimmer10.stopShimmer()
-            shimmer11.stopShimmer()
-            shimmer12.stopShimmer()
-        }
+    private fun imagesNavigateToMainActivity() {
+        val intent = Intent(this, Recover::class.java)
+        intent.putExtra("count", count)
+        startActivity(intent)
+        finish()
     }
 
 

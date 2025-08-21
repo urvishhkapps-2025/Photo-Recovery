@@ -9,208 +9,333 @@
     tools:context=".activity.storage.RecoverDetails">
 
     <RelativeLayout
-        android:id="@+id/layToolbar"
+        android:id="@+id/layRecover"
         android:layout_width="match_parent"
-        android:layout_height="56dp">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/btnBack"
-            android:layout_width="33dp"
-            android:layout_height="39dp"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="10dp"
-            android:padding="10dp"
-            android:src="@drawable/ic_back" />
-
-
-        <TextView
-            android:id="@+id/txt1"
+        <RelativeLayout
+            android:id="@+id/layToolbar"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="15dp"
-            android:layout_toStartOf="@id/img"
-            android:layout_toEndOf="@+id/btnBack"
-            android:fontFamily="@font/a_500"
-            android:gravity="start"
-            android:includeFontPadding="false"
-            android:text="All"
-            android:textColor="@color/black"
-            android:textSize="22sp" />
+            android:layout_height="56dp">
 
-        <ImageView
-            android:id="@+id/img"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="10dp"
-            android:src="@drawable/ic_title" />
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="33dp"
+                android:layout_height="39dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_back" />
+
+
+            <TextView
+                android:id="@+id/txt1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="15dp"
+                android:layout_toStartOf="@id/img"
+                android:layout_toEndOf="@+id/btnBack"
+                android:fontFamily="@font/a_500"
+                android:gravity="start"
+                android:includeFontPadding="false"
+                android:text="All"
+                android:textColor="@color/black"
+                android:textSize="22sp" />
+
+            <ImageView
+                android:id="@+id/img"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/ic_title" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/layToolbar">
+
+            <TextView
+                android:id="@+id/textSort"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="15dp"
+                android:drawableEnd="@drawable/ic_down"
+                android:drawablePadding="15dp"
+                android:fontFamily="@font/a_500"
+                android:gravity="end"
+                android:includeFontPadding="false"
+                android:text="All"
+                android:textColor="@color/black"
+                android:textSize="22sp" />
+
+            <RelativeLayout
+                android:id="@+id/layCheck"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textSort"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="15dp">
+
+                <TextView
+                    android:id="@+id/textHigh"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:fontFamily="@font/a_500"
+                    android:gravity="end"
+                    android:includeFontPadding="false"
+                    android:text="Hide Low quality photos"
+                    android:textColor="@color/black"
+                    android:textSize="20sp" />
+
+                <ImageView
+                    android:id="@+id/btnSwitch"
+                    android:layout_width="54dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentEnd="true"
+                    android:showText="false"
+                    android:splitTrack="false"
+                    android:src="@drawable/ic_uncheck_t"
+                    app:thumbIcon="@null"
+                    app:useMaterialThemeColors="false" />
+
+            </RelativeLayout>
+
+            <LinearLayout
+                android:id="@+id/layAll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/layCheck"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/cbPhoto"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_alignParentEnd="true"
+                    android:background="@drawable/custom_check_box"
+                    android:backgroundTint="@color/transparent_color"
+                    android:backgroundTintMode="src_atop"
+                    android:buttonTint="@color/transparent_color"
+                    android:includeFontPadding="false" />
+
+                <TextView
+                    android:id="@+id/textAllSelect"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:fontFamily="@font/a_400"
+                    android:includeFontPadding="false"
+                    android:text="Select All Photos"
+                    android:textColor="@color/appColor"
+                    android:textSize="16dp" />
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/layButton"
+                android:layout_below="@+id/layAll"
+                android:layout_marginHorizontal="15dp"
+                android:layout_marginVertical="10dp" />
+
+            <LinearLayout
+                android:id="@+id/layButton"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginBottom="5dp"
+                android:weightSum="2">
+
+                <LinearLayout
+                    android:id="@+id/clickRecover"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_sec_bg"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_turn" />
+
+                    <TextView
+                        android:id="@+id/textRecover"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:fontFamily="@font/a_400"
+                        android:includeFontPadding="false"
+                        android:text="Recover"
+                        android:textColor="@color/white"
+                        android:textSize="22sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/clickDelete"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="5dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_sec_bg"
+                    android:gravity="center">
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:src="@drawable/ic_delete" />
+
+                    <TextView
+                        android:id="@+id/textDelete"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="10dp"
+                        android:fontFamily="@font/a_400"
+                        android:includeFontPadding="false"
+                        android:text="Delete"
+                        android:textColor="@color/white"
+                        android:textSize="22sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
 
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/layRecoverSccessfull"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/layToolbar">
-
-        <TextView
-            android:id="@+id/textSort"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="15dp"
-            android:drawableEnd="@drawable/ic_down"
-            android:drawablePadding="15dp"
-            android:fontFamily="@font/a_500"
-            android:gravity="end"
-            android:includeFontPadding="false"
-            android:text="All"
-            android:textColor="@color/black"
-            android:textSize="22sp" />
+        android:background="@color/white"
+        android:visibility="gone">
 
         <RelativeLayout
-            android:id="@+id/layCheck"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textSort"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="15dp">
-
-            <TextView
-                android:id="@+id/textHigh"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:fontFamily="@font/a_500"
-                android:gravity="end"
-                android:includeFontPadding="false"
-                android:text="Hide Low quality photos"
-                android:textColor="@color/black"
-                android:textSize="20sp" />
+            android:layout_height="56dp">
 
             <ImageView
-                android:id="@+id/btnSwitch"
-                android:layout_width="54dp"
+                android:id="@+id/btnColse"
+                android:layout_width="33dp"
+                android:layout_height="39dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="10dp"
+                android:padding="10dp"
+                android:src="@drawable/ic_back" />
+
+            <ImageView
+                android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:layout_alignParentEnd="true"
-                android:showText="false"
-                android:splitTrack="false"
-                android:src="@drawable/ic_uncheck_t"
-                app:thumbIcon="@null"
-                app:useMaterialThemeColors="false" />
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/ic_home" />
 
         </RelativeLayout>
 
-        <LinearLayout
-            android:id="@+id/layAll"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/layCheck"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="20dp"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:layout_centerVertical="true"
+            android:layout_marginTop="-10dp">
 
-            <CheckBox
-                android:id="@+id/cbPhoto"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_alignParentEnd="true"
-                android:background="@drawable/custom_check_box"
-                android:backgroundTint="@color/transparent_color"
-                android:backgroundTintMode="src_atop"
-                android:buttonTint="@color/transparent_color"
-                android:includeFontPadding="false" />
+            <com.airbnb.lottie.LottieAnimationView
+                android:id="@+id/loaderSplash"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
+                app:lottie_autoPlay="true"
+                app:lottie_loop="true"
+                app:lottie_speed="0.7"
+                tools:ignore="MissingClass" />
 
             <TextView
-                android:id="@+id/textAllSelect"
+                android:id="@+id/text3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="10dp"
-                android:fontFamily="@font/a_400"
+                android:layout_below="@+id/loaderSplash"
+                android:layout_centerHorizontal="true"
+                android:fontFamily="@font/a_500"
+                android:gravity="center"
                 android:includeFontPadding="false"
-                android:text="Select All Photos"
-                android:textColor="@color/appColor"
-                android:textSize="16dp" />
+                android:text="Recovered successfully"
+                android:textColor="@color/black"
+                android:textSize="26sp" />
 
-        </LinearLayout>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recyclerView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/layButton"
-            android:layout_below="@+id/layAll"
-            android:layout_marginHorizontal="15dp"
-            android:layout_marginVertical="10dp" />
-
-        <LinearLayout
-            android:id="@+id/layButton"
-            android:layout_width="match_parent"
-            android:layout_height="55dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginBottom="5dp"
-            android:weightSum="2">
+            <TextView
+                android:id="@+id/textCountOfRecover"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/text3"
+                android:layout_centerHorizontal="true"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="5dp"
+                android:fontFamily="@font/a_500"
+                android:includeFontPadding="false"
+                android:text="1 photo have been saved to the device"
+                android:textColor="#7E7E7E"
+                android:textSize="16sp" />
 
             <LinearLayout
-                android:id="@+id/clickRecover"
-                android:layout_width="0dp"
-                android:background="@drawable/btn_sec_bg"
-                android:layout_weight="1"
-                android:layout_marginEnd="5dp"
-                android:gravity="center"
-                android:layout_height="match_parent">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:src="@drawable/ic_turn"
-                    android:layout_height="wrap_content"/>
+                android:id="@+id/layRecoverButton"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_below="@+id/textCountOfRecover"
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginTop="50dp"
+                android:layout_marginBottom="15dp"
+                android:weightSum="2">
 
                 <TextView
-                    android:id="@+id/textRecover"
-                    android:layout_width="wrap_content"
-                    android:text="Recover"
+                    android:id="@+id/btnContinues"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_sec_bg_new"
                     android:fontFamily="@font/a_400"
+                    android:gravity="center"
                     android:includeFontPadding="false"
+                    android:text="Continues"
+                    android:textColor="@color/appColor"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:id="@+id/btnView"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_bg"
+                    android:fontFamily="@font/a_400"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:text="View"
                     android:textColor="@color/white"
-                    android:layout_marginStart="10dp"
-                    android:textSize="22sp"
-                    android:layout_height="wrap_content"/>
+                    android:textSize="22sp" />
 
             </LinearLayout>
 
-            <LinearLayout
-                android:id="@+id/clickDelete"
-                android:layout_width="0dp"
-                android:background="@drawable/btn_sec_bg"
-                android:layout_weight="1"
-                android:layout_marginStart="5dp"
-                android:gravity="center"
-                android:layout_height="match_parent">
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:src="@drawable/ic_delete"
-                    android:layout_height="20dp"/>
-
-                <TextView
-                    android:id="@+id/textDelete"
-                    android:layout_width="wrap_content"
-                    android:text="Delete"
-                    android:fontFamily="@font/a_400"
-                    android:includeFontPadding="false"
-                    android:textColor="@color/white"
-                    android:layout_marginStart="10dp"
-                    android:textSize="22sp"
-                    android:layout_height="wrap_content"/>
-
-            </LinearLayout>
-
-        </LinearLayout>
+        </RelativeLayout>
 
     </RelativeLayout>
 

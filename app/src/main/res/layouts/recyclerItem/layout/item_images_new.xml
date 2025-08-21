@@ -57,13 +57,26 @@
                 app:cardCornerRadius="10dp"
                 app:cardElevation="0dp">
 
-                <ImageView
-                    android:id="@+id/imgFirst"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="centerCrop"
-                    android:background="#EFF5FF"
-                    android:src="@drawable/demo" />
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/imgFirst"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/demo" />
+
+                    <ImageView
+                        android:id="@+id/vidFirst"
+                        android:visibility="gone"
+                        android:layout_width="40dp"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_video_play"
+                        android:layout_height="40dp"/>
+
+                </RelativeLayout>
 
             </androidx.cardview.widget.CardView>
 
@@ -76,14 +89,26 @@
                 app:cardCornerRadius="10dp"
                 app:cardElevation="0dp">
 
-                <ImageView
-                    android:id="@+id/imgSecond"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:adjustViewBounds="true"
-                    android:scaleType="centerCrop"
-                    android:background="#EFF5FF"
-                    android:src="@drawable/demo" />
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/imgSecond"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/demo" />
+
+                    <ImageView
+                        android:id="@+id/vidSecond"
+                        android:visibility="gone"
+                        android:layout_width="40dp"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_video_play"
+                        android:layout_height="40dp"/>
+
+                </RelativeLayout>
 
             </androidx.cardview.widget.CardView>
 
@@ -96,13 +121,26 @@
                 app:cardCornerRadius="10dp"
                 app:cardElevation="0dp">
 
-                <ImageView
-                    android:id="@+id/imgThird"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="#EFF5FF"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/demo" />
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/imgThird"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/demo" />
+
+                    <ImageView
+                        android:id="@+id/vidThird"
+                        android:visibility="gone"
+                        android:layout_width="40dp"
+                        android:layout_centerInParent="true"
+                        android:src="@drawable/ic_video_play"
+                        android:layout_height="40dp"/>
+
+                </RelativeLayout>
 
             </androidx.cardview.widget.CardView>
 

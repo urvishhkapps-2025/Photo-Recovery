@@ -4,17 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- Pre-Android 13 (<= API 32) runtime perms -->
-    <uses-permission
-        android:name="android.permission.READ_EXTERNAL_STORAGE"
-        android:maxSdkVersion="32" /> <!-- Write was deprecated on API 29; limit to <=29 -->
-    <uses-permission
-        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
-        android:maxSdkVersion="29" /> <!-- Android 13+ granular media perms (API 33+) -->
-    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
-    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
-    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" /> <!-- Optional: photo EXIF location for API 29+ media reads -->
-    <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" /> <!-- Android 14+ “selected photos” grant (optional to declare) -->
-    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" /> <!-- Android 11+ All files access (special permission; Play policy restricted) -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission
         android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
@@ -23,15 +14,20 @@
         android:name=".Application"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
+        android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:enableOnBackInvokedCallback="true"
         android:theme="@style/Theme.PhotoRecovery"
         tools:targetApi="33">
+        <activity
+            android:name=".activity.storage.RecoveredHistory"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".activity.storage.RecoverDetails"
             android:exported="true"
@@ -82,7 +78,34 @@
             android:name=".activity.common.MainActivity"
             android:exported="false"
             android:launchMode="singleTop"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait" /> <!-- File Provider for sharing images -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider> <!-- Service for background operations -->
+        <!-- <service -->
+        <!-- android:name=".service.ImageScanService" -->
+        <!-- android:enabled="true" -->
+        <!-- android:exported="false" /> -->
+        <!-- &lt;!&ndash; Receiver for storage events &ndash;&gt; -->
+        <!-- <receiver android:name=".receiver.StorageReceiver"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="android.intent.action.MEDIA_MOUNTED" /> -->
+        <!-- <action android:name="android.intent.action.MEDIA_UNMOUNTED" /> -->
+        <!-- <action android:name="android.intent.action.MEDIA_EJECT" /> -->
+        <!-- <action android:name="android.intent.action.MEDIA_SCANNER_FINISHED" /> -->
+        <!-- <data android:scheme="file" /> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
+        <!-- Add this for FileObserver compatibility -->
+        <meta-data
+            android:name="android.allow_storage_access_framework"
+            android:value="true" />
     </application>
 
 </manifest>

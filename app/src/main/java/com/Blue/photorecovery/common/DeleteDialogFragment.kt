@@ -1,11 +1,15 @@
 package com.Blue.photorecovery.common
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toDrawable
 import androidx.fragment.app.DialogFragment
@@ -24,7 +28,7 @@ class DeleteDialogFragment(count: Int, val decision: (decision: Boolean) -> Unit
     var count = count
 
     @SuppressLint("MissingInflatedId")
-    public override fun onCreateView(
+    override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -33,7 +37,7 @@ class DeleteDialogFragment(count: Int, val decision: (decision: Boolean) -> Unit
         return display.root
     }
 
-    public override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         display.apply {
             btnOk.setOnClickListener(this@DeleteDialogFragment)
@@ -42,6 +46,7 @@ class DeleteDialogFragment(count: Int, val decision: (decision: Boolean) -> Unit
                 setTextSize(TypedValue.COMPLEX_UNIT_PX, 60f)
                 text = "Delete ($count Photos)"
             }
+            setGradientOnlyOnEasyRecovery(btnNo)
             textContent.setTextSize(TypedValue.COMPLEX_UNIT_PX, 50f)
             btnOk.setTextSize(TypedValue.COMPLEX_UNIT_PX, 50f)
             btnNo.setTextSize(TypedValue.COMPLEX_UNIT_PX, 50f)
@@ -57,7 +62,29 @@ class DeleteDialogFragment(count: Int, val decision: (decision: Boolean) -> Unit
         }
     }
 
-    public override fun show(manager: FragmentManager, tag: String?) {
+    fun setGradientOnlyOnEasyRecovery(tv: TextView) {
+        val fullText = " No "
+        val target = "No"
+        val start = fullText.indexOf(target)
+        val end = start + target.length
+
+        if (start >= 0) {
+            val ss = SpannableString(fullText)
+            ss.setSpan(
+                LinearGradientSpan(
+                    Color.parseColor("#005EEC"), // orange
+                    Color.parseColor("#67DCFC")  // pink
+                ),
+                start, end,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            tv.text = ss
+        } else {
+            tv.text = fullText // fallback
+        }
+    }
+
+    override fun show(manager: FragmentManager, tag: String?) {
         try {
             val ft: FragmentTransaction = manager.beginTransaction()
             ft.add(this, tag)
@@ -67,7 +94,7 @@ class DeleteDialogFragment(count: Int, val decision: (decision: Boolean) -> Unit
     }
 
     @Deprecated("Deprecated in Java")
-    public override fun onActivityCreated(arg0: Bundle?) {
+    override fun onActivityCreated(arg0: Bundle?) {
         super.onActivityCreated(arg0)
         try {
             if ((dialog != null) && (dialog!!.window != null)) {
@@ -87,7 +114,7 @@ class DeleteDialogFragment(count: Int, val decision: (decision: Boolean) -> Unit
         }
     }
 
-    public override fun onClick(v: View) {
+    override fun onClick(v: View) {
         when (v.id) {
             R.id.btnOk -> try {
                 if (dialog != null && dialog!!.isShowing) {
