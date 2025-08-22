@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
+import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import androidx.activity.OnBackPressedCallback
@@ -111,14 +112,7 @@ class PreparingToScan : AppCompatActivity() {
                 val images = folder.listFiles()?.filter { it.isFile && ImageUtils.isImageFile(it) }
                     ?: emptyList()
 
-                if (!firstFolderProcessed && images.isNotEmpty()) {
-                    firstFolderImages = images.take(4).map { it.toUri() }
-                    firstFolderProcessed = true
-
-                    withContext(Dispatchers.Main) {
-                        displayFirstFolderImages(firstFolderImages)
-                    }
-                }
+                firstFolderImages = images.take(4).map { it.toUri() }
 
                 val folderSize = images.sumOf { it.length() }
                 val coverUris = images.take(4).map { it.toUri() }
@@ -149,6 +143,7 @@ class PreparingToScan : AppCompatActivity() {
 
             withContext(Dispatchers.Main) {
                 imagesShowScanComplete(scanResult)
+                displayFirstFolderImages(firstFolderImages)
             }
         }
     }
@@ -208,6 +203,7 @@ class PreparingToScan : AppCompatActivity() {
     }
 
     private fun displayFirstFolderImages(images: List<Uri>) {
+
         images.forEachIndexed { index, uri ->
             val imageView = when (index) {
                 0 -> binding.imgFirst
@@ -227,14 +223,10 @@ class PreparingToScan : AppCompatActivity() {
                 }
             }
         }
-        if (images.size < 4) binding.imgFirst.visibility = View.INVISIBLE
-        if (images.size < 4) binding.vidFirst.visibility = View.INVISIBLE
-        if (images.size < 3) binding.imgSecond.visibility = View.INVISIBLE
-        if (images.size < 3) binding.vidSecond.visibility = View.INVISIBLE
-        if (images.size < 2) binding.imgThird.visibility = View.INVISIBLE
-        if (images.size < 2) binding.vidThird.visibility = View.INVISIBLE
-        if (images.isEmpty()) binding.imgFourth.visibility = View.INVISIBLE
-        if (images.isEmpty()) binding.vidFourth.visibility = View.INVISIBLE
+        if (images.size < 4) binding.card1.visibility = View.GONE
+        if (images.size < 3) binding.card2.visibility = View.GONE
+        if (images.size < 2) binding.card3.visibility = View.GONE
+        if (images.isEmpty()) binding.card4.visibility = View.GONE
     }
 
     private fun imagesShowScanComplete(scanResult: ScanResult) {
