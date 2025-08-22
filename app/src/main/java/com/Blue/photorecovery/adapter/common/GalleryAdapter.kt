@@ -96,18 +96,9 @@ class GalleryAdapter(
         holder.cbSelectDay.isChecked = allSelected
 
         holder.cbSelectDay.setOnCheckedChangeListener { _, isChecked ->
-            dayPhotos.forEach { photo ->
-                if (!isProgrammaticSelection) {
-                    if (isChecked) {
-                        selectedItems.add(photo.image.id)
-                    } else {
-                        selectedItems.remove(photo.image.id)
-                    }
-                    onSelectionChanged(selectedItems.size)
-                }
+            if (!isProgrammaticSelection) {
+                toggleDaySelection(header.date, isChecked)
             }
-            notifyItemRangeChanged(holder.position, dayPhotos.size + 1)
-            onSelectionChanged(selectedItems.size)
         }
     }
 
@@ -129,15 +120,8 @@ class GalleryAdapter(
         holder.cbPhoto.isChecked = selectedItems.contains(image.id)
 
         holder.cbPhoto.setOnCheckedChangeListener { _, isChecked ->
-            if (!isProgrammaticSelection) {
-                if (isChecked) {
-                    selectedItems.add(image.id)
-                } else {
-                    selectedItems.remove(image.id)
-                }
-                onSelectionChanged(selectedItems.size)
-            }
-            onSelectionChanged(selectedItems.size)
+            val newChecked = !selectedItems.contains(image.id)
+            updateSelection(image.id, newChecked)
         }
     }
 
@@ -167,6 +151,59 @@ class GalleryAdapter(
         onSelectionChanged(0)
         isProgrammaticSelection = false
     }
+    private fun getPhotosForDay(dayTimestamp: Long): List<GalleryRow.Photo> {
+        return currentList.filterIsInstance<GalleryRow.Photo>()
+            .filter { it.image.dateTakenMillis?.let { time -> isSameDay(time, dayTimestamp) } == true }
+    }
+
+    private fun toggleDaySelection(dayTimestamp: Long, isSelected: Boolean) {
+        isProgrammaticSelection = true
+
+        val dayPhotos = getPhotosForDay(dayTimestamp)
+        dayPhotos.forEach { photo ->
+            if (isSelected) {
+                selectedItems.add(photo.image.id)
+            } else {
+                selectedItems.remove(photo.image.id)
+            }
+        }
+
+        // Find all header positions for this day and update them
+        currentList.forEachIndexed { index, row ->
+            if (row is GalleryRow.Header && isSameDay(row.date, dayTimestamp)) {
+                notifyItemChanged(index)
+            }
+        }
+
+        // Also update all photo items in this day
+        dayPhotos.forEach { photo ->
+            val photoIndex = currentList.indexOf(photo)
+            if (photoIndex != -1) {
+                notifyItemChanged(photoIndex)
+            }
+        }
+
+        onSelectionChanged(selectedItems.size)
+        isProgrammaticSelection = false
+    }
+
+    private fun updateSelection(imageId: Long, isSelected: Boolean) {
+        if (isSelected) {
+            selectedItems.add(imageId)
+        } else {
+            selectedItems.remove(imageId)
+        }
+
+        // Update header states
+        currentList.forEachIndexed { index, row ->
+            if (row is GalleryRow.Header) {
+                notifyItemChanged(index)
+            }
+        }
+
+        onSelectionChanged(selectedItems.size)
+    }
+
 
 
     fun areAllSelected(): Boolean {
