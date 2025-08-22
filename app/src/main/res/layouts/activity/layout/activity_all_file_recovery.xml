@@ -23,7 +23,7 @@
             android:includeFontPadding="false"
             android:text="All file recovery"
             android:textColor="@color/black"
-            android:textSize="22sp" />
+            android:textSize="26sp" />
 
         <ImageView
             android:id="@+id/btnSetting"
@@ -49,7 +49,7 @@
             <LinearLayout
                 android:id="@+id/layLiner"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="110dp"
                 android:layout_marginHorizontal="15dp"
                 android:layout_marginTop="20dp"
                 android:weightSum="3">
@@ -71,6 +71,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="5dp"
                         android:fontFamily="@font/a_500"
+                        android:textSize="18sp"
                         android:includeFontPadding="false"
                         android:text="Photo\nRecover"
                         android:textColor="@color/black" />
@@ -102,6 +103,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="5dp"
                         android:fontFamily="@font/a_500"
+                        android:textSize="18sp"
                         android:includeFontPadding="false"
                         android:text="Video\nRecover"
                         android:textColor="@color/black" />
@@ -133,8 +135,7 @@
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="5dp"
                         android:fontFamily="@font/a_500"
-
-
+                        android:textSize="18sp"
                         android:includeFontPadding="false"
                         android:maxLines="2"
                         android:text="Audio\nRecover"
@@ -175,6 +176,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
+                        android:textSize="18sp"
                         android:layout_marginTop="10dp"
                         android:layout_marginEnd="3dp"
                         android:fontFamily="@font/a_500"
@@ -208,7 +210,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
                         android:layout_marginTop="10dp"
-
+                        android:textSize="18sp"
                         android:layout_marginEnd="5dp"
                         android:fontFamily="@font/a_500"
                         android:includeFontPadding="false"
@@ -263,7 +265,7 @@
                         android:includeFontPadding="false"
                         android:text="Recycle Bin"
                         android:textColor="@color/black"
-                        android:textSize="16sp" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/t7"
@@ -314,7 +316,7 @@
                         android:includeFontPadding="false"
                         android:text="Junk Remover"
                         android:textColor="@color/black"
-                        android:textSize="16sp" />
+                        android:textSize="20sp" />
 
                     <TextView
                         android:id="@+id/t9"
