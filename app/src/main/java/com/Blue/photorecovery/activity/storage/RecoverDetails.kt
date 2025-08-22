@@ -9,15 +9,18 @@ import android.os.Build
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
-import android.util.Log
 import android.util.TypedValue
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
+import android.widget.PopupWindow
+import android.widget.RadioButton
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.DialogFragment
@@ -31,9 +34,7 @@ import com.Blue.photorecovery.common.LinearGradientSpan
 import com.Blue.photorecovery.common.UserDataManager
 import com.Blue.photorecovery.databinding.ActivityRecoverDetailsBinding
 import com.Blue.photorecovery.storage.images.EventBus
-import com.Blue.photorecovery.storage.images.FolderItem
 import com.Blue.photorecovery.storage.images.GalleryRow
-import com.Blue.photorecovery.storage.images.ImageUtils
 import com.Blue.photorecovery.storage.images.ImageUtils.isImageFile
 import com.Blue.photorecovery.storage.video.VideoUtils.isVideoFile
 import kotlinx.coroutines.Dispatchers
@@ -56,9 +57,13 @@ class RecoverDetails : AppCompatActivity() {
     private var allImages: List<ImageItem> = emptyList()
     private var isLowQualityHidden = false
     private var isSelectAll = false
-
+    private var isNewestFirst = false
     var count = 1
+    var radioCount = 1
 
+    private var mainPopupWindow: PopupWindow? = null
+    private var customizePopupWindow: PopupWindow? = null
+    private var selectedLabel = "All Days"
 
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("ResourceType", "SetTextI18n")
@@ -181,7 +186,7 @@ class RecoverDetails : AppCompatActivity() {
             allImages = images
 
             withContext(Dispatchers.Main) {
-                applyFilters()
+                applyFilters(0)
             }
         }
     }
@@ -210,7 +215,7 @@ class RecoverDetails : AppCompatActivity() {
             val videos = loadVideosFromFolder(folderPath)
             allImages = videos
             withContext(Dispatchers.Main) {
-                applyFilters()
+                applyFilters(0)
             }
         }
     }
@@ -234,16 +239,25 @@ class RecoverDetails : AppCompatActivity() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun applyFilters() {
+    private fun applyFilters(filter: Int) {
         var filteredImages = allImages
 
-        // Apply quality filter
-        if (isLowQualityHidden) {
-            filteredImages = filteredImages.filter { it.sizeBytes >= 1_000_000 } // 1MB threshold
+        when (filter) {
+            1 -> { /* Filter 1 logic */ }
+            2 -> { /* Filter 2 logic */ }
+            3 -> { /* Filter 3 logic */ }
+            4 -> { /* Filter 4 logic */ }
+            5 -> {isNewestFirst = true }// Apply date sorting (newest first)
+            6 -> {isNewestFirst = false } // Apply date sorting (oldest first)
+            7 -> {}// Small first}
+            8 -> {} // Large first}
+            9 -> {
+                // Apply quality filter
+                if (isLowQualityHidden) {
+                    filteredImages = filteredImages.filter { it.sizeBytes >= 1_000_000 }.toMutableList() // 1MB threshold
+                }
+            }
         }
-
-        // Apply date sorting (newest first)
-        filteredImages = filteredImages.sortedByDescending { it.dateTakenMillis ?: 0 }
 
         val rows = buildRowsGroupedByDay(
             filteredImages,
@@ -251,8 +265,56 @@ class RecoverDetails : AppCompatActivity() {
             DateTimeFormatter.ofPattern("dd MMM, yyyy", Locale.getDefault())
         )
 
-        adapter.submitList(rows)
+        adapter.submitList(rows){
+        binding.recyclerView.scrollToPosition(0)}
         updateSelectAllText()
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    fun buildRowsGroupedByDay(
+        images: List<ImageItem>,
+        zoneId: ZoneId,
+        formatter: DateTimeFormatter
+    ): List<GalleryRow> {
+        val rows = mutableListOf<GalleryRow>()
+
+        // Group images by date
+        val groupedByDay = images.groupBy { image ->
+            image.dateTakenMillis?.let {
+                Instant.ofEpochMilli(it).atZone(zoneId).toLocalDate()
+            } ?: run {
+                // Fallback for images without dateTakenMillis
+                Instant.ofEpochMilli(image.getFallbackDate()).atZone(zoneId).toLocalDate()
+            }
+        }
+
+        // Sort dates based on current sorting preference
+        val sortedDates = if (isNewestFirst) {
+            groupedByDay.entries.sortedByDescending { it.key } // Newest first
+        } else {
+            groupedByDay.entries.sortedBy { it.key } // Newest last
+        }
+
+        // Create rows
+        sortedDates.forEach { (date, dayImages) ->
+            val title = formatter.format(date)
+            val headerDate = dayImages.first().dateTakenMillis ?: dayImages.first().getFallbackDate()
+
+            rows.add(GalleryRow.Header(title, headerDate))
+            rows.addAll(dayImages.map { GalleryRow.Photo(it) })
+        }
+
+        return rows
+    }
+
+    private fun ImageItem.getFallbackDate(): Long {
+        // Try to get date from file last modified or use current time as fallback
+        return try {
+            val file = File(uri.path ?: "")
+            if (file.exists()) file.lastModified() else System.currentTimeMillis()
+        } catch (e: Exception) {
+            System.currentTimeMillis()
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -269,7 +331,7 @@ class RecoverDetails : AppCompatActivity() {
                     btnSwitch.setImageResource(R.drawable.ic_check_t)
                 }
                 adapter.toggleSelectAll(false)
-                applyFilters()
+                applyFilters(9)
             }
 
             cbPhoto.setOnCheckedChangeListener { _, checked ->
@@ -299,11 +361,140 @@ class RecoverDetails : AppCompatActivity() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun toggleSortOrder() {
-        // Toggle between ascending/descending
-        binding.textSort.isSelected = !binding.textSort.isSelected
-        applyFilters()
+        showMainPopup()
+    }
+
+    private fun showMainPopup() {
+        if (mainPopupWindow?.isShowing == true) {
+            mainPopupWindow?.dismiss()
+            return
+        }
+
+        val popupView = LayoutInflater.from(this).inflate(R.layout.layout_dropdown, null)
+        mainPopupWindow = PopupWindow(
+            popupView,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true
+        ).apply {
+            isOutsideTouchable = true
+            isFocusable = true
+        }
+
+        setupRadio(popupView, R.id.rb_alldays, "All Days")
+        setupRadio(popupView, R.id.rb_today, "Today")
+        setupRadio(popupView, R.id.rb_yesterday, "Yesterday")
+        setupRadio(popupView, R.id.rb_within_7, "Within 7 Days")
+
+        val rbCustomize = popupView.findViewById<RadioButton>(R.id.rb_customize)
+        val customizeParent = rbCustomize.parent as View
+
+        val customizeListener = View.OnClickListener {
+            mainPopupWindow?.dismiss()
+            showCustomizePopup()
+        }
+
+        customizeParent.setOnClickListener(customizeListener)
+        rbCustomize.setOnClickListener(customizeListener)
+
+        highlightMainSelection(popupView)
+
+        mainPopupWindow?.showAsDropDown(binding.img, 0, 10, Gravity.START)
+    }
+
+    private fun showCustomizePopup() {
+        if (customizePopupWindow?.isShowing == true) {
+            customizePopupWindow?.dismiss()
+            return
+        }
+
+        val customizeView = LayoutInflater.from(this).inflate(R.layout.layout_customize, null)
+        customizePopupWindow = PopupWindow(
+            customizeView,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            ViewGroup.LayoutParams.WRAP_CONTENT,
+            true
+        ).apply {
+            isOutsideTouchable = true
+            isFocusable = true
+        }
+
+        setupRadio(customizeView, R.id.rb_new, "Date (New to Old)")
+        setupRadio(customizeView, R.id.rb_old, "Date (Old to New)")
+        setupRadio(customizeView, R.id.rb_small_large, "Size (Small to Large)")
+        setupRadio(customizeView, R.id.rb_large_small, "Size (Large to Small)")
+
+        highlightCustomizeSelection(customizeView)
+
+        customizePopupWindow?.showAsDropDown(binding.img, 0, 10, Gravity.START)
+    }
+
+    @SuppressLint("NewApi")
+    private fun setupRadio(parentView: View, radioId: Int, fullLabel: String) {
+        val radio = parentView.findViewById<RadioButton>(radioId)
+        val parent = radio.parent as View
+
+        val listener = View.OnClickListener {
+            selectedLabel = fullLabel
+            binding.textSort.text = selectedLabel
+            if (selectedLabel == "All Days") {
+                applyFilters(1)
+            } else if (selectedLabel == "Today") {
+                applyFilters(2)
+            } else if (selectedLabel == "Yesterday") {
+                applyFilters(3)
+            } else if (selectedLabel == "Within 7 Days") {
+                applyFilters(4)
+            } else if (selectedLabel == "Date (New to Old)") {
+                applyFilters(5)
+            } else if (selectedLabel == "Date (Old to New)") {
+                applyFilters(6)
+            } else if (selectedLabel == "Size (Small to Large)") {
+                applyFilters(7)
+            } else if (selectedLabel == "Size (Large to Small)") {
+                applyFilters(8)
+            }
+            mainPopupWindow?.dismiss()
+            customizePopupWindow?.dismiss()
+        }
+
+        parent.setOnClickListener(listener)
+        radio.setOnClickListener(listener)
+    }
+
+    private fun getShortLabel(fullLabel: String): String {
+        return when {
+            fullLabel.startsWith("Date") -> "Date"
+            fullLabel.startsWith("Size") -> "Size"
+            else -> fullLabel
+        }
+    }
+
+    private fun highlightMainSelection(parentView: View) {
+        val rbAll = parentView.findViewById<RadioButton>(R.id.rb_alldays)
+        val rbToday = parentView.findViewById<RadioButton>(R.id.rb_today)
+        val rbYesterday = parentView.findViewById<RadioButton>(R.id.rb_yesterday)
+        val rbWithin7 = parentView.findViewById<RadioButton>(R.id.rb_within_7)
+        val rbCustomize = parentView.findViewById<RadioButton>(R.id.rb_customize)
+
+        rbAll.isChecked = selectedLabel == "All Days"
+        rbToday.isChecked = selectedLabel == "Today"
+        rbYesterday.isChecked = selectedLabel == "Yesterday"
+        rbWithin7.isChecked = selectedLabel == "Within 7 Days"
+        rbCustomize.isChecked = selectedLabel.startsWith("Date") || selectedLabel.startsWith("Size")
+    }
+
+    private fun highlightCustomizeSelection(parentView: View) {
+        val rbNew = parentView.findViewById<RadioButton>(R.id.rb_new)
+        val rbOld = parentView.findViewById<RadioButton>(R.id.rb_old)
+        val rbSmall = parentView.findViewById<RadioButton>(R.id.rb_small_large)
+        val rbLarge = parentView.findViewById<RadioButton>(R.id.rb_large_small)
+
+        rbNew.isChecked = selectedLabel == "Date (New to Old)"
+        rbOld.isChecked = selectedLabel == "Date (Old to New)"
+        rbSmall.isChecked = selectedLabel == "Size (Small to Large)"
+        rbLarge.isChecked = selectedLabel == "Size (Large to Small)"
     }
 
     private fun updateSelectAllText() {
@@ -389,7 +580,7 @@ class RecoverDetails : AppCompatActivity() {
         }
         try {
             val fm: FragmentManager = supportFragmentManager
-            val dialog = DeleteDialogFragment(count,selected.size) {
+            val dialog = DeleteDialogFragment(count, selected.size) {
                 if (it) {
                     performDeletion(selected)
                 }
@@ -458,31 +649,6 @@ class RecoverDetails : AppCompatActivity() {
     private fun previewImage(image: ImageItem) {
         // Implement image preview functionality
         // You can start a new activity or show a dialog for image preview
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun buildRowsGroupedByDay(
-        images: List<ImageItem>,
-        zoneId: ZoneId,
-        formatter: DateTimeFormatter
-    ): List<GalleryRow> {
-        val rows = mutableListOf<GalleryRow>()
-
-        val groupedByDay = images.groupBy { image ->
-            image.dateTakenMillis?.let {
-                Instant.ofEpochMilli(it).atZone(zoneId).toLocalDate()
-            }
-        }
-
-        groupedByDay.entries.sortedByDescending { it.key }.forEach { (date, dayImages) ->
-            val title = date?.let { formatter.format(it) } ?: "Unknown Date"
-            val headerDate = dayImages.first().dateTakenMillis ?: 0L
-
-            rows.add(GalleryRow.Header(title, headerDate))
-            rows.addAll(dayImages.map { GalleryRow.Photo(it) })
-        }
-
-        return rows
     }
 
 }

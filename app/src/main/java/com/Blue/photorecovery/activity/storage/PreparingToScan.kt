@@ -212,8 +212,6 @@ class PreparingToScan : AppCompatActivity() {
 
     private fun displayFirstFolderImages(images: List<Uri>) {
 
-        Log.i("TAG", "displayFirstFolderImages: " + images)
-
         images.forEachIndexed { index, uri ->
             val imageView = when (index) {
                 0 -> binding.imgFourth

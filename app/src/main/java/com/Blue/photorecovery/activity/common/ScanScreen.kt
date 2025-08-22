@@ -1,10 +1,14 @@
 package com.Blue.photorecovery.activity.common
 
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.LinearGradient
 import android.graphics.Shader
 import android.os.Bundle
+import android.text.SpannableString
+import android.text.Spanned
 import android.util.TypedValue
+import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.graphics.toColorInt
@@ -15,6 +19,7 @@ import androidx.fragment.app.FragmentManager
 import com.Blue.photorecovery.R
 import com.Blue.photorecovery.activity.storage.PreparingToScan
 import com.Blue.photorecovery.announcement.Canny
+import com.Blue.photorecovery.common.LinearGradientSpan
 import com.Blue.photorecovery.databinding.ActivityScanScreenBinding
 import com.Blue.photorecovery.utils.PermissionUtils
 
@@ -67,18 +72,7 @@ class ScanScreen : AppCompatActivity() {
             textDescription.setTextSize(TypedValue.COMPLEX_UNIT_PX, 60f)
             clickScan.setTextSize(TypedValue.COMPLEX_UNIT_PX, 80f)
 
-            val paint = clickScan.paint
-            val width = paint.measureText(clickScan.text.toString())
-            val textShader = LinearGradient(
-                0f, 0f, width, clickScan.textSize, // Gradient from left to right
-                intArrayOf(
-                    "#005EEC".toColorInt(), // Start color
-                    "#67DCFC".toColorInt(), // End color
-                ),
-                null,
-                Shader.TileMode.CLAMP
-            )
-            clickScan.paint.shader = textShader
+            setGradientOnlyOnEasyRecovery(clickScan)
 
             clickScan.setOnClickListener {
                 val hasPermission = PermissionUtils.isStoragePermissionGranted(this@ScanScreen)
@@ -95,6 +89,29 @@ class ScanScreen : AppCompatActivity() {
 
         }
     }
+
+    fun setGradientOnlyOnEasyRecovery(tv: TextView) {
+        val fullText = " Tap "
+        val target = "Tap"
+        val start = fullText.indexOf(target)
+        val end = start + target.length
+
+        if (start >= 0) {
+            val ss = SpannableString(fullText)
+            ss.setSpan(
+                LinearGradientSpan(
+                    Color.parseColor("#005EEC"), // orange
+                    Color.parseColor("#67DCFC")  // pink
+                ),
+                start, end,
+                Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
+            )
+            tv.text = ss
+        } else {
+            tv.text = fullText // fallback
+        }
+    }
+
 
     private fun getPermission() {
         try {

@@ -72,7 +72,7 @@
                 android:fontFamily="@font/a_500"
                 android:gravity="end"
                 android:includeFontPadding="false"
-                android:text="All"
+                android:text="All Days"
                 android:textColor="@color/black"
                 android:textSize="22sp" />
 
