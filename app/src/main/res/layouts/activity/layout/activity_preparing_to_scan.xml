@@ -317,7 +317,7 @@
                         android:layout_height="match_parent"
                         android:background="#80000000"
                         android:gravity="center"
-                        android:visibility="visible"
+                        android:visibility="gone"
                         android:text="+2100"
                         android:textColor="@color/white" />
 

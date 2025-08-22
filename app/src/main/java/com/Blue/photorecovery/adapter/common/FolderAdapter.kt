@@ -79,10 +79,17 @@ class FolderAdapter(
             }
 
             imageView?.let {
+                var images = R.drawable.bg_fake_image
+                if (count == 1) {
+                    images = R.drawable.bg_fake_image
+                } else if (count == 2) {
+                    images = R.drawable.bg_fake_video
+                }
                 Glide.with(holder.itemView)
                     .load(uri)
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .centerCrop()
+                    .error(images)
+                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                    .dontTransform()
                     .into(it)
                 it.visibility = View.VISIBLE // Make sure it's visible
             }

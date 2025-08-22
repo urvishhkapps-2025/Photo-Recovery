@@ -20,12 +20,13 @@ import com.Blue.photorecovery.databinding.DeleteDialogBinding
 import com.daimajia.androidanimations.library.Techniques
 import com.daimajia.androidanimations.library.YoYo
 
-class DeleteDialogFragment(count: Int, val decision: (decision: Boolean) -> Unit) :
+class DeleteDialogFragment(type: Int, count: Int, val decision: (decision: Boolean) -> Unit) :
     DialogFragment(),
     View.OnClickListener {
     private lateinit var display: DeleteDialogBinding
 
     var count = count
+    var type = type
 
     @SuppressLint("MissingInflatedId")
     override fun onCreateView(
@@ -44,7 +45,11 @@ class DeleteDialogFragment(count: Int, val decision: (decision: Boolean) -> Unit
             btnNo.setOnClickListener(this@DeleteDialogFragment)
             deleteCount.apply {
                 setTextSize(TypedValue.COMPLEX_UNIT_PX, 60f)
-                text = "Delete ($count Photos)"
+                if (type == 1) {
+                    text = "Delete ($count Photos)"
+                } else if (type == 2) {
+                    text = "Delete ($count Videos)"
+                }
             }
             setGradientOnlyOnEasyRecovery(btnNo)
             textContent.setTextSize(TypedValue.COMPLEX_UNIT_PX, 50f)

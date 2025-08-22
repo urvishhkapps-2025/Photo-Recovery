@@ -105,14 +105,22 @@ class PreparingToScan : AppCompatActivity() {
             val imageFolders = ImageUtils.getImageFolders(externalDir)
 
             val folderItems = mutableListOf<FolderItem>()
-            var firstFolderProcessed = false
+            var firstFolderImages: List<Uri> = emptyList() // For first folder images
+            var totalImages = 0
+            var totalSizeBytes = 0L
 
-            imageFolders.forEachIndexed { index, folder ->
+            // Flag to check if first folder is processed
+            var isFirstFolder = true
 
+            imageFolders.forEach { folder ->
                 val images = folder.listFiles()?.filter { it.isFile && ImageUtils.isImageFile(it) }
                     ?: emptyList()
 
-                firstFolderImages = images.take(4).map { it.toUri() }
+                // Store images from the first folder
+                if (isFirstFolder) {
+                    firstFolderImages = images.take(4).map { it.toUri() }
+                    isFirstFolder = false // Set to false after first folder is processed
+                }
 
                 val folderSize = images.sumOf { it.length() }
                 val coverUris = images.take(4).map { it.toUri() }
@@ -128,13 +136,13 @@ class PreparingToScan : AppCompatActivity() {
                     lastModified = folder.lastModified(),
                 )
                 folderItems.add(folderItem)
-                delay(30)
+                delay(30) // Optional delay
             }
 
             val scanResult = ScanResult(
                 totalImages = totalImages,
                 totalSizeBytes = totalSizeBytes,
-                totalFolders = totalFolders,
+                totalFolders = imageFolders.size,
                 scannedFolders = folderItems,
                 firstFolderImages = firstFolderImages
             )
@@ -204,20 +212,22 @@ class PreparingToScan : AppCompatActivity() {
 
     private fun displayFirstFolderImages(images: List<Uri>) {
 
+        Log.i("TAG", "displayFirstFolderImages: " + images)
+
         images.forEachIndexed { index, uri ->
             val imageView = when (index) {
-                0 -> binding.imgFirst
-                1 -> binding.imgSecond
-                2 -> binding.imgThird
-                3 -> binding.imgFourth
+                0 -> binding.imgFourth
+                1 -> binding.imgThird
+                2 -> binding.imgSecond
+                3 -> binding.imgFirst
                 else -> null
             }
             imageView?.apply {
                 imageView?.let {
                     Glide.with(this@PreparingToScan)
                         .load(uri)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .centerCrop()
+                        .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                        .dontTransform()
                         .into(it)
                     it.visibility = View.VISIBLE // Make sure it's visible
                 }
@@ -231,7 +241,12 @@ class PreparingToScan : AppCompatActivity() {
 
     private fun imagesShowScanComplete(scanResult: ScanResult) {
 
-        binding.textTotalImages.text = "+${scanResult.totalImages - 4}"
+        if (scanResult.totalImages > 4) {
+            binding.textTotalImages.text = "+${scanResult.totalImages - 4}"
+            binding.textTotalImages.visibility = View.VISIBLE
+        } else {
+            binding.textTotalImages.visibility = View.GONE
+        }
         binding.textTotalImage.text = "${scanResult.totalImages}"
         val totalSize = humanBytes(scanResult.totalSizeBytes)
         binding.textTotalSize.text = totalSize

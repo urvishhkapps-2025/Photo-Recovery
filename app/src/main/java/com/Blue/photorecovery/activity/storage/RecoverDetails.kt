@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
+import android.util.Log
 import android.util.TypedValue
 import android.view.View
 import android.widget.TextView
@@ -16,6 +17,7 @@ import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.DialogFragment
@@ -29,7 +31,11 @@ import com.Blue.photorecovery.common.LinearGradientSpan
 import com.Blue.photorecovery.common.UserDataManager
 import com.Blue.photorecovery.databinding.ActivityRecoverDetailsBinding
 import com.Blue.photorecovery.storage.images.EventBus
+import com.Blue.photorecovery.storage.images.FolderItem
 import com.Blue.photorecovery.storage.images.GalleryRow
+import com.Blue.photorecovery.storage.images.ImageUtils
+import com.Blue.photorecovery.storage.images.ImageUtils.isImageFile
+import com.Blue.photorecovery.storage.video.VideoUtils.isVideoFile
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -161,6 +167,7 @@ class RecoverDetails : AppCompatActivity() {
                     return if (adapter.currentList.getOrNull(position) is GalleryRow.Header) 3 else 1
                 }
             }
+
         }
 
         binding.recyclerView.layoutManager = glm
@@ -197,13 +204,6 @@ class RecoverDetails : AppCompatActivity() {
         } ?: emptyList()
     }
 
-    private fun isImageFile(file: File): Boolean {
-        val imageExtensions = setOf("jpg", "jpeg", "png", "gif", "webp", "bmp")
-        val extension = file.extension.lowercase()
-        return imageExtensions.contains(extension)
-    }
-
-
     @RequiresApi(Build.VERSION_CODES.O)
     private fun loadVideos() {
         lifecycleScope.launch(Dispatchers.IO) {
@@ -232,13 +232,6 @@ class RecoverDetails : AppCompatActivity() {
             )
         } ?: emptyList()
     }
-
-    private fun isVideoFile(file: File): Boolean {
-        val videoExtensions = setOf("mp4", "mkv", "avi", "mov", "wmv", "flv")
-        val extension = file.extension.lowercase()
-        return videoExtensions.contains(extension)
-    }
-
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun applyFilters() {
@@ -396,7 +389,7 @@ class RecoverDetails : AppCompatActivity() {
         }
         try {
             val fm: FragmentManager = supportFragmentManager
-            val dialog = DeleteDialogFragment(selected.size) {
+            val dialog = DeleteDialogFragment(count,selected.size) {
                 if (it) {
                     performDeletion(selected)
                 }

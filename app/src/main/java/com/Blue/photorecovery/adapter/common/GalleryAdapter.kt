@@ -2,6 +2,7 @@ package com.Blue.photorecovery.adapter.common
 
 import ImageItem
 import android.app.Activity
+import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
@@ -103,12 +104,24 @@ class GalleryAdapter(
     }
 
     private fun bindPhoto(holder: PhotoViewHolder, image: ImageItem) {
+
+        var images = R.drawable.bg_fake_image
+        if (count == 1){
+            images = R.drawable.bg_fake_image
+        }else if (count == 2){
+            images = R.drawable.bg_fake_video
+        }
+
         // Load image with Glide
         Glide.with(activity)
             .load(image.uri)
+            .error(images)
             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-            .centerCrop()
+            .dontTransform()
             .into(holder.imageView)
+
+        Log.i("TAG", "bindPhoto: "+image.uri)
+        Log.i("TAG", "bindPhoto: "+image)
 
         if (count == 2) {
             holder.vidFirst.visibility = View.VISIBLE
