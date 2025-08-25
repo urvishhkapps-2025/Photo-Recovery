@@ -41,17 +41,18 @@
 
         <ImageView
             android:id="@+id/clickDeleteImages"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="10dp"
-            android:padding="5dp"
+            android:padding="8dp"
+            android:backgroundTintMode="src_atop"
+            android:backgroundTint="@color/bg_select_delete"
             android:src="@drawable/ic_recovery_delete" />
 
     </RelativeLayout>
 
-    <!-- res/layout/activity_recover_history.xml -->
     <LinearLayout
         android:layout_below="@+id/layToolbar"
         android:orientation="vertical"

@@ -9,10 +9,13 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
 import androidx.viewpager2.widget.ViewPager2
 import com.Blue.photorecovery.R
 import com.Blue.photorecovery.adapter.common.RecoverHistoryAdapter
 import com.Blue.photorecovery.adapter.common.RecoverPagerAdapter
+import com.Blue.photorecovery.common.DeleteItemDialogFragment
 import com.Blue.photorecovery.common.SelectionHost
 import com.Blue.photorecovery.databinding.ActivityRecoveredHistoryBinding
 import com.google.android.material.tabs.TabLayout
@@ -22,7 +25,6 @@ class RecoveredHistory : AppCompatActivity(), RecoverHistoryAdapter.OnSelectionC
     private lateinit var binding: ActivityRecoveredHistoryBinding
     private lateinit var pagerAdapter: RecoverPagerAdapter
     private val TAB_TITLES = listOf("Photos", "Videos", "Audio")
-    private var isDelete = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -36,6 +38,8 @@ class RecoveredHistory : AppCompatActivity(), RecoverHistoryAdapter.OnSelectionC
 
         binding.apply {
 
+            clickDeleteImages.isEnabled = false
+
             txt1.setTextSize(TypedValue.COMPLEX_UNIT_PX, 55f)
 
             btnBack.setOnClickListener {
@@ -43,14 +47,32 @@ class RecoveredHistory : AppCompatActivity(), RecoverHistoryAdapter.OnSelectionC
             }
 
             clickDeleteImages.setOnClickListener {
-                if (isDelete) {
-                    val host = currentSelectionHost()
-                    val deleted = host?.onDeleteRequest() ?: 0
-                    if (deleted > 0) {
-                        Toast.makeText(this@RecoveredHistory,"$deleted Items Deleted SuccessFully", Toast.LENGTH_SHORT).show()
+                try {
+                    val fm: FragmentManager = supportFragmentManager
+                    val dialog = DeleteItemDialogFragment() {
+                        if (it) {
+                            val host = currentSelectionHost()
+                            val deleted = host?.onDeleteRequest() ?: 0
+                            if (deleted > 0) {
+                                Toast.makeText(
+                                    this@RecoveredHistory,
+                                    "$deleted Items Deleted SuccessFully",
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
                     }
-                }else{
-                    Toast.makeText(this@RecoveredHistory,"Please Select Item For Delete", Toast.LENGTH_SHORT).show()
+                    dialog.isCancelable = false
+                    dialog.setStyle(
+                        DialogFragment.STYLE_NORMAL,
+                        android.R.style.Theme_Light_NoTitleBar_Fullscreen
+                    )
+                    dialog.show(
+                        fm,
+                        DeleteItemDialogFragment::class.java.name
+                    )
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
             }
 
@@ -122,7 +144,11 @@ class RecoveredHistory : AppCompatActivity(), RecoverHistoryAdapter.OnSelectionC
     }
 
     override fun onSelectionChanged(selectedCount: Int, totalCount: Int) {
-        isDelete = selectedCount > 0
+        if (selectedCount > 0) {
+            binding.clickDeleteImages.isEnabled = true
+        } else {
+            binding.clickDeleteImages.isEnabled = false
+        }
     }
 
     private fun currentSelectionHost(): SelectionHost? {

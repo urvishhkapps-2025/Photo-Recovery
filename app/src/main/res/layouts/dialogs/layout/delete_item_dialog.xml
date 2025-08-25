@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#BF000000">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/layContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_gravity="bottom"
+        android:layout_marginHorizontal="15dp"
+        android:visibility="visible"
+        app:cardBackgroundColor="@color/transparent_color"
+        app:cardElevation="0dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/dialog_bg">
+
+            <TextView
+                android:id="@+id/deleteCount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:fontFamily="@font/a_500"
+                android:gravity="center"
+                android:includeFontPadding="false"
+                android:paddingTop="5dp"
+                android:text="Do You Want To Delete Permanently The Selected File?"
+                android:textColor="@color/appColor"
+                android:textSize="22sp" />
+
+            <TextView
+                android:id="@+id/textContent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/deleteCount"
+                android:layout_centerHorizontal="true"
+                android:layout_marginHorizontal="10dp"
+                android:layout_marginTop="10dp"
+                android:paddingHorizontal="10dp"
+                android:layout_marginBottom="15dp"
+                android:fontFamily="@font/a_500"
+                android:includeFontPadding="false"
+                android:text="Files will be permanently deleted and cannot de recovered"
+                android:textColor="@color/black"
+                android:textSize="20sp" />
+
+            <LinearLayout
+                android:id="@+id/layButton"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
+                android:layout_below="@+id/textContent"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginBottom="15dp"
+                android:weightSum="2">
+
+                <TextView
+                    android:id="@+id/btnNo"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_sec_bg_new"
+                    android:fontFamily="@font/a_400"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:text="Cancle"
+                    android:textColor="@color/appColor"
+                    android:textSize="22sp" />
+
+                <TextView
+                    android:id="@+id/btnOk"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/btn_bg"
+                    android:fontFamily="@font/a_400"
+                    android:gravity="center"
+                    android:includeFontPadding="false"
+                    android:text="Delete"
+                    android:textColor="@color/white"
+                    android:textSize="22sp" />
+
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>
