@@ -20,4 +20,7 @@
 
     <color name="black_70_per">#4C000000</color>
 
+    <color name="tab_text_selected">#FFFFFF</color>
+    <color name="tab_text_unselected">#616161</color>
+
 </resources>

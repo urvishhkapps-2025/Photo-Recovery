@@ -233,7 +233,7 @@
             </LinearLayout>
 
             <RelativeLayout
-                android:id="@+id/clickRecyclerView"
+                android:id="@+id/clickRecoverHistory"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 android:layout_below="@+id/layLiner1"
@@ -263,7 +263,7 @@
                         android:layout_height="wrap_content"
                         android:fontFamily="@font/a_500"
                         android:includeFontPadding="false"
-                        android:text="Recycle Bin"
+                        android:text="Recover History"
                         android:textColor="@color/black"
                         android:textSize="20sp" />
 
@@ -274,7 +274,7 @@
                         android:layout_marginTop="5dp"
                         android:fontFamily="@font/a_500"
                         android:includeFontPadding="false"
-                        android:text="Deleted file are restores here"
+                        android:text="All Recover Files Is Here"
                         android:textColor="#7E7E7E"
                         android:textSize="16sp" />
 
@@ -286,7 +286,7 @@
                 android:id="@+id/clickJunk"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
-                android:layout_below="@+id/clickRecyclerView"
+                android:layout_below="@+id/clickRecoverHistory"
                 android:layout_marginHorizontal="20dp"
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/weight_bg"

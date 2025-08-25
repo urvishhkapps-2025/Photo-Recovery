@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -48,6 +49,9 @@ class FolderAdapter(
     class FolderViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         val folderName: TextView = view.findViewById(R.id.textFolderName)
         val image1: ImageView = view.findViewById(R.id.imgFirst)
+        val card1: CardView = view.findViewById(R.id.card1)
+        val card2: CardView = view.findViewById(R.id.card2)
+        val card3: CardView = view.findViewById(R.id.card3)
         val image2: ImageView = view.findViewById(R.id.imgSecond)
         val image3: ImageView = view.findViewById(R.id.imgThird)
         val vidFirst: ImageView = view.findViewById(R.id.vidFirst)
@@ -97,36 +101,36 @@ class FolderAdapter(
 
         // Handle empty cover slots - show placeholders
         if (folder.coverUris.size < 3) {
-            holder.image3.visibility = View.INVISIBLE
+            holder.card3.visibility = View.INVISIBLE
             if (count == 2) {
                 holder.vidThird.visibility = View.INVISIBLE
             }
         } else {
-            holder.image3.visibility = View.VISIBLE
+            holder.card3.visibility = View.VISIBLE
             if (count == 2) {
                 holder.vidThird.visibility = View.VISIBLE
             }
         }
 
         if (folder.coverUris.size < 2) {
-            holder.image2.visibility = View.INVISIBLE
+            holder.card2.visibility = View.INVISIBLE
             if (count == 2) {
                 holder.vidSecond.visibility = View.INVISIBLE
             }
         } else {
-            holder.image2.visibility = View.VISIBLE
+            holder.card2.visibility = View.VISIBLE
             if (count == 2) {
                 holder.vidSecond.visibility = View.VISIBLE
             }
         }
 
         if (folder.coverUris.isEmpty()) {
-            holder.image1.visibility = View.INVISIBLE
+            holder.card1.visibility = View.INVISIBLE
             if (count == 2) {
                 holder.vidFirst.visibility = View.INVISIBLE
             }
         } else {
-            holder.image1.visibility = View.VISIBLE
+            holder.card1.visibility = View.VISIBLE
             if (count == 2) {
                 holder.vidFirst.visibility = View.VISIBLE
             }

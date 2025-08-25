@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
+import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -57,10 +58,11 @@ class RecoverDetails : AppCompatActivity() {
     private var allImages: List<ImageItem> = emptyList()
     private var isLowQualityHidden = false
     private var isSelectAll = false
-    private var isNewestFirst = false
+    private var isNewestFirst = true
+    private var isSmallToFirst = false
+    private var isLargeToFirst = false
     var count = 1
-    var radioCount = 1
-
+    var filterType = 0
     private var mainPopupWindow: PopupWindow? = null
     private var customizePopupWindow: PopupWindow? = null
     private var selectedLabel = "All Days"
@@ -186,6 +188,7 @@ class RecoverDetails : AppCompatActivity() {
             allImages = images
 
             withContext(Dispatchers.Main) {
+                filterType = 0
                 applyFilters(0)
             }
         }
@@ -215,6 +218,7 @@ class RecoverDetails : AppCompatActivity() {
             val videos = loadVideosFromFolder(folderPath)
             allImages = videos
             withContext(Dispatchers.Main) {
+                filterType = 0
                 applyFilters(0)
             }
         }
@@ -238,25 +242,70 @@ class RecoverDetails : AppCompatActivity() {
         } ?: emptyList()
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
+    @SuppressLint("NewApi")
     private fun applyFilters(filter: Int) {
         var filteredImages = allImages
-
+        val today = java.time.LocalDate.now()
+        val yesterday = today.minusDays(1)
+        if (isLowQualityHidden) {
+            filteredImages = filteredImages.filter { it.sizeBytes >= 1_000_000 }
+                .toMutableList() // 1MB threshold
+        }
         when (filter) {
-            1 -> { /* Filter 1 logic */ }
-            2 -> { /* Filter 2 logic */ }
-            3 -> { /* Filter 3 logic */ }
-            4 -> { /* Filter 4 logic */ }
-            5 -> {isNewestFirst = true }// Apply date sorting (newest first)
-            6 -> {isNewestFirst = false } // Apply date sorting (oldest first)
-            7 -> {}// Small first}
-            8 -> {} // Large first}
-            9 -> {
-                // Apply quality filter
-                if (isLowQualityHidden) {
-                    filteredImages = filteredImages.filter { it.sizeBytes >= 1_000_000 }.toMutableList() // 1MB threshold
+            1 -> { /* Filter 1 logic */
+            }
+
+            2 -> {
+                // Today
+                filteredImages = filteredImages.filter { image ->
+                    val date = Instant.ofEpochMilli(
+                        image.dateTakenMillis ?: image.getFallbackDate()
+                    ).atZone(ZoneId.systemDefault()).toLocalDate()
+                    date == today
                 }
             }
+
+            3 -> {
+                // Yesterday
+                filteredImages = filteredImages.filter { image ->
+                    val date = Instant.ofEpochMilli(
+                        image.dateTakenMillis ?: image.getFallbackDate()
+                    ).atZone(ZoneId.systemDefault()).toLocalDate()
+                    date == yesterday
+                }
+            }
+
+            4 -> {
+                // Within 7 Days
+                val sevenDaysAgo = today.minusDays(7)
+                filteredImages = filteredImages.filter { image ->
+                    val date = Instant.ofEpochMilli(
+                        image.dateTakenMillis ?: image.getFallbackDate()
+                    ).atZone(ZoneId.systemDefault()).toLocalDate()
+                    date.isAfter(sevenDaysAgo) || date.isEqual(sevenDaysAgo)
+                }
+            }
+
+            5 -> {
+                // Apply date sorting (newest first)
+                isNewestFirst = true
+            }
+
+            6 -> {
+                // Apply date sorting (oldest first)
+                isNewestFirst = false
+            }
+
+            7 -> {
+                // Small first
+                isSmallToFirst = true
+            }
+
+            8 -> {
+                // Large first
+                isLargeToFirst = true
+            }
+
         }
 
         val rows = buildRowsGroupedByDay(
@@ -265,8 +314,9 @@ class RecoverDetails : AppCompatActivity() {
             DateTimeFormatter.ofPattern("dd MMM, yyyy", Locale.getDefault())
         )
 
-        adapter.submitList(rows){
-        binding.recyclerView.scrollToPosition(0)}
+        adapter.submitList(rows) {
+            binding.recyclerView.scrollToPosition(0)
+        }
         updateSelectAllText()
     }
 
@@ -298,12 +348,27 @@ class RecoverDetails : AppCompatActivity() {
         // Create rows
         sortedDates.forEach { (date, dayImages) ->
             val title = formatter.format(date)
-            val headerDate = dayImages.first().dateTakenMillis ?: dayImages.first().getFallbackDate()
+            val headerDate =
+                dayImages.first().dateTakenMillis ?: dayImages.first().getFallbackDate()
 
             rows.add(GalleryRow.Header(title, headerDate))
-            rows.addAll(dayImages.map { GalleryRow.Photo(it) })
+            val sortedDayImages = when {
+                isSmallToFirst -> dayImages.sortedBy { it.sizeBytes }
+                isLargeToFirst -> dayImages.sortedByDescending { it.sizeBytes }
+                else -> dayImages // default order
+            }
+            rows.addAll(sortedDayImages.map { GalleryRow.Photo(it) })
         }
 
+        if (rows.isNotEmpty()) {
+            // Add Empty Message For A Screen
+            binding.layAll.visibility = View.VISIBLE
+        } else {
+            binding.layAll.visibility = View.GONE
+        }
+
+        isSmallToFirst = false
+        isLargeToFirst = false
         return rows
     }
 
@@ -331,7 +396,7 @@ class RecoverDetails : AppCompatActivity() {
                     btnSwitch.setImageResource(R.drawable.ic_check_t)
                 }
                 adapter.toggleSelectAll(false)
-                applyFilters(9)
+                applyFilters(filterType)
             }
 
             cbPhoto.setOnCheckedChangeListener { _, checked ->
@@ -439,20 +504,28 @@ class RecoverDetails : AppCompatActivity() {
             selectedLabel = fullLabel
             binding.textSort.text = selectedLabel
             if (selectedLabel == "All Days") {
+                filterType = 1
                 applyFilters(1)
             } else if (selectedLabel == "Today") {
+                filterType = 2
                 applyFilters(2)
             } else if (selectedLabel == "Yesterday") {
+                filterType = 3
                 applyFilters(3)
             } else if (selectedLabel == "Within 7 Days") {
+                filterType = 4
                 applyFilters(4)
             } else if (selectedLabel == "Date (New to Old)") {
+                filterType = 5
                 applyFilters(5)
             } else if (selectedLabel == "Date (Old to New)") {
+                filterType = 6
                 applyFilters(6)
             } else if (selectedLabel == "Size (Small to Large)") {
+                filterType = 7
                 applyFilters(7)
             } else if (selectedLabel == "Size (Large to Small)") {
+                filterType = 8
                 applyFilters(8)
             }
             mainPopupWindow?.dismiss()
@@ -562,7 +635,8 @@ class RecoverDetails : AppCompatActivity() {
                     }
 
                     btnView.setOnClickListener {
-
+                        val intent = Intent(this@RecoverDetails, RecoveredHistory::class.java)
+                        startActivity(intent)
                     }
 
                 }

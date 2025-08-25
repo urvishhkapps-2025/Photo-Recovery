@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.Blue.photorecovery.R
+import com.Blue.photorecovery.activity.storage.RecoveredHistory
 import com.Blue.photorecovery.databinding.ActivityAllFileRecoveryBinding
 
 class AllFileRecovery : AppCompatActivity() {
@@ -85,7 +86,10 @@ class AllFileRecovery : AppCompatActivity() {
 
             clickContact.setOnClickListener { }
 
-            clickRecyclerView.setOnClickListener { }
+            clickRecoverHistory.setOnClickListener {
+                val intent = Intent(this@AllFileRecovery, RecoveredHistory::class.java)
+                startActivity(intent)
+            }
 
             clickJunk.setOnClickListener { }
 
