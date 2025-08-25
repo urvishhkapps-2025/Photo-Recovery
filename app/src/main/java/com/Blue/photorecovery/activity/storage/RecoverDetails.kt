@@ -9,7 +9,6 @@ import android.os.Build
 import android.os.Bundle
 import android.text.SpannableString
 import android.text.Spanned
-import android.util.Log
 import android.util.TypedValue
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -403,9 +402,9 @@ class RecoverDetails : AppCompatActivity() {
                 if (updatingGlobal) return@setOnCheckedChangeListener   // prevent loop
                 adapter?.toggleSelectAll(checked)
                 if (adapter?.areAllSelected() == true) {
-                    textAllSelect.text = "Unselect All Photos"
+                    textAllSelect.text = "Unselect All"
                 } else {
-                    textAllSelect.text = "Select All Photos"
+                    textAllSelect.text = "Select All"
                 }
             }
 
@@ -576,7 +575,7 @@ class RecoverDetails : AppCompatActivity() {
 
         updatingGlobal = true
         isSelectAll = selectedCount == totalSelectable && totalSelectable > 0
-        binding.textAllSelect.text = if (isSelectAll) "Unselect All Photos" else "Select All Photos"
+        binding.textAllSelect.text = if (isSelectAll) "Unselect All" else "Select All"
         binding.cbPhoto.isChecked = isSelectAll
         updatingGlobal = false
 
@@ -602,14 +601,25 @@ class RecoverDetails : AppCompatActivity() {
         }
 
         lifecycleScope.launch(Dispatchers.IO) {
-            val allRecovered = UserDataManager.instance!!.getRecoverImages() ?: mutableListOf()
-            selected.forEach { image ->
-                val uriString = image.uri.toString()
-                if (!allRecovered.contains(uriString)) {
-                    allRecovered.add(uriString)
+            if (count == 1) {
+                val allRecovered = UserDataManager.instance!!.getRecoverImages()
+                selected.forEach { image ->
+                    val uriString = image.uri.toString()
+                    if (!allRecovered.contains(uriString)) {
+                        allRecovered.add(uriString)
+                    }
                 }
+                UserDataManager.instance!!.setRecoverImages(allRecovered as ArrayList<String>?)
+            } else if (count == 2) {
+                val allRecovered = UserDataManager.instance!!.getRecoverVideo()
+                selected.forEach { image ->
+                    val uriString = image.uri.toString()
+                    if (!allRecovered.contains(uriString)) {
+                        allRecovered.add(uriString)
+                    }
+                }
+                UserDataManager.instance!!.setRecoverVideo(allRecovered as ArrayList<String>?)
             }
-            UserDataManager.instance!!.setRecoverImages(allRecovered as ArrayList<String>?)
 
             withContext(Dispatchers.Main) {
 
@@ -635,12 +645,14 @@ class RecoverDetails : AppCompatActivity() {
                     }
 
                     btnView.setOnClickListener {
+                        btnColse.performClick()
                         val intent = Intent(this@RecoverDetails, RecoveredHistory::class.java)
                         startActivity(intent)
                     }
 
                 }
                 adapter.deselectAll()
+
             }
         }
     }

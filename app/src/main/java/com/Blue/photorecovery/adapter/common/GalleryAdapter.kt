@@ -213,7 +213,6 @@ class GalleryAdapter(
                 notifyItemChanged(index)
             }
         }
-
         onSelectionChanged(selectedItems.size)
     }
 

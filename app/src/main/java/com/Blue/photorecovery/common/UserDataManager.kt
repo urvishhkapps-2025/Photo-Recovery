@@ -72,9 +72,30 @@ class UserDataManager {
         return recoverImages
     }
 
+    fun setRecoverVideo(imagesList: ArrayList<String>?) {
+        val json: String = gsonInstance!!.toJson(imagesList)
+        userPreferencesEditor!!.putString(SAVE_VIDEO, json)
+        userPreferencesEditor!!.commit()
+    }
+
+    fun getRecoverVideo(): ArrayList<String> {
+        val json = userPreferences!!.getString(SAVE_VIDEO, "")
+        var recoverImages: ArrayList<String> =
+            ArrayList<String>()
+        if (!TextUtils.isEmpty(json) && !json!!.isEmpty() && json != "null") {
+            recoverImages = gsonInstance!!.fromJson(
+                json,
+                object :
+                    TypeToken<ArrayList<String>?>() {}.type
+            )
+        }
+        return recoverImages
+    }
+
     companion object {
         const val IS_FIRST = "is_first"
         const val SAVE_IMAGES = "save_image"
+        const val SAVE_VIDEO = "save_video"
 
         @SuppressLint("StaticFieldLeak")
         private var userDataManager: UserDataManager? = null

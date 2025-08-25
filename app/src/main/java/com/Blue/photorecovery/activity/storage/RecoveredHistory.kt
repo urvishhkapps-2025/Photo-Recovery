@@ -1,22 +1,28 @@
 package com.Blue.photorecovery.activity.storage
 
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.ViewGroup
 import android.widget.TextView
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.Blue.photorecovery.R
+import com.Blue.photorecovery.adapter.common.RecoverHistoryAdapter
 import com.Blue.photorecovery.adapter.common.RecoverPagerAdapter
+import com.Blue.photorecovery.common.SelectionHost
 import com.Blue.photorecovery.databinding.ActivityRecoveredHistoryBinding
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 
-class RecoveredHistory : AppCompatActivity() {
+class RecoveredHistory : AppCompatActivity(), RecoverHistoryAdapter.OnSelectionChangeListener {
     private lateinit var binding: ActivityRecoveredHistoryBinding
-
+    private lateinit var pagerAdapter: RecoverPagerAdapter
     private val TAB_TITLES = listOf("Photos", "Videos", "Audio")
+    private var isDelete = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,8 +36,39 @@ class RecoveredHistory : AppCompatActivity() {
 
         binding.apply {
 
+            txt1.setTextSize(TypedValue.COMPLEX_UNIT_PX, 55f)
 
-            viewPager.adapter = RecoverPagerAdapter(this@RecoveredHistory)
+            btnBack.setOnClickListener {
+                finish()
+            }
+
+            clickDeleteImages.setOnClickListener {
+                if (isDelete) {
+                    val host = currentSelectionHost()
+                    val deleted = host?.onDeleteRequest() ?: 0
+                    if (deleted > 0) {
+                        Toast.makeText(this@RecoveredHistory,"$deleted Items Deleted SuccessFully", Toast.LENGTH_SHORT).show()
+                    }
+                }else{
+                    Toast.makeText(this@RecoveredHistory,"Please Select Item For Delete", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            val callback = object : OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    if (tabLayout.selectedTabPosition != 0) {
+                        val tab: TabLayout.Tab =
+                            tabLayout.getTabAt(0)!!
+                        tab.select()
+                        return
+                    }
+                    binding.btnBack.performClick()
+                }
+            }
+            onBackPressedDispatcher.addCallback(this@RecoveredHistory, callback)
+
+            pagerAdapter = RecoverPagerAdapter(this@RecoveredHistory)
+            viewPager.adapter = pagerAdapter
 
             // Attach with custom tab views
             TabLayoutMediator(tabLayout, viewPager) { tab, position ->
@@ -67,15 +104,30 @@ class RecoveredHistory : AppCompatActivity() {
 
             // Optional: sync ViewPager page change -> tab selected state (when swiping)
             viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+                private var lastPos = -1
                 override fun onPageSelected(position: Int) {
                     // TabLayoutMediator already selects tab; we just update customView state:
                     for (i in 0 until tabLayout.tabCount) {
                         tabLayout.getTabAt(i)?.customView?.isSelected = (i == position)
                     }
+                    if (lastPos != -1) {
+                        pagerAdapter.pageVisibilityAt(lastPos)?.onHidden()
+                    }
+
+                    lastPos = position
                 }
             })
         }
 
+    }
+
+    override fun onSelectionChanged(selectedCount: Int, totalCount: Int) {
+        isDelete = selectedCount > 0
+    }
+
+    private fun currentSelectionHost(): SelectionHost? {
+        val tag = "f${binding.viewPager.currentItem}"
+        return supportFragmentManager.findFragmentByTag(tag) as? SelectionHost
     }
 
 }
